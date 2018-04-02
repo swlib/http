@@ -6,7 +6,7 @@
  * Time: 上午9:36
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
@@ -80,7 +80,7 @@ class Request extends Message implements RequestInterface
         return $this;
     }
 
-    public function getUri(): ?Uri
+    public function getUri(): ?UriInterface
     {
         return $this->uri;
     }

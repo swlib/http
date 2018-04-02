@@ -1,6 +1,6 @@
 <?php
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 use Psr\Http\Message\UriInterface;
 
@@ -450,7 +450,6 @@ class Uri implements UriInterface
     {
         return $this->query;
     }
-
 
     public function getPathWithQuery()
     {

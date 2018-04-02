@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/3/30 下午10:27
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 interface StreamInterface extends \Psr\Http\Message\StreamInterface
 {

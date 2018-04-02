@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/3/30 下午9:00
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 trait CookiesManagerTrait
 {
@@ -69,7 +69,7 @@ trait CookiesManagerTrait
             'name' => $name,
             'expires' => -1,
             'path' => $path,
-            'domain' => $domain
+            'domain' => $domain,
         ]);
 
         return $this;

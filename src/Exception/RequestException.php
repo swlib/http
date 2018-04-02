@@ -1,14 +1,14 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/4/1 上午1:22
  */
 
-namespace Swooler\Http\Exception;
+namespace Swlib\Http\Exception;
 
-use Swooler\Http\Request;
-use Swooler\Http\Response;
+use Swlib\Http\Request;
+use Swlib\Http\Response;
 
 class RequestException extends TransferException
 {

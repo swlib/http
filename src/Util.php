@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/1/9 下午9:18
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class Util
 {
@@ -41,7 +41,7 @@ class Util
     {
         static $whole_fields = [
             'date' => true,
-            'user-agent' => true
+            'user-agent' => true,
         ];
 
         /**

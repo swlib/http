@@ -1,15 +1,15 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/3/25 下午1:56
  */
 
 require '../vendor/autoload.php';
 
-use Swooler\Http\Uri;
+use Swlib\Http\Uri;
 
-$uri = new Uri('https://swooler:123@www.qq.com/news/index.html?q=1#section1');
+$uri = new Uri('https://swlib:123@www.qq.com/news/index.html?q=1#section1');
 var_dump($uri->getScheme());
 var_dump($uri->getHost());
 var_dump($uri->getPort());

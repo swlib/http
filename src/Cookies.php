@@ -6,7 +6,7 @@
  * Time: 下午4:00
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class Cookies
 {
@@ -16,7 +16,7 @@ class Cookies
     /**
      * an array include some Http\Cookie objects
      *
-     * @var \Swooler\Http\Cookie[]
+     * @var \Swlib\Http\Cookie[]
      */
     public $raw = [];
 
@@ -110,7 +110,7 @@ class Cookies
                     }
                 } else {
                     //request header string 'a=b; c=d;'
-                    $cookies = rtrim($cookies, '; ');//清除冗余字符
+                    $cookies = rtrim($cookies, '; '); //清除冗余字符
                     $arr = explode('; ', $cookies);
                     foreach ($arr as $string) {
                         $this->add($string, $default, $nonempty);
@@ -125,7 +125,7 @@ class Cookies
     /**
      * get raw
      *
-     * @return \Swooler\Http\Cookie[]
+     * @return \Swlib\Http\Cookie[]
      */
     public function getRaw(): array
     {
@@ -156,8 +156,9 @@ class Cookies
             $priorities = [];
             /** @var $cookie Cookie */
             foreach ($this->raw as $cookie) {
-                if ($cookie->isValid($uri)) {//Session cookie or unexpired && match domain path
-                    $priority = strlen($cookie->domain);//Record priority, the higher the match, the higher the priority
+                if ($cookie->isValid($uri)) {
+//Session cookie or unexpired && match domain path
+                    $priority = strlen($cookie->domain); //Record priority, the higher the match, the higher the priority
                     if (!isset($r[$cookie->name]) || $priorities[$cookie->name] < $priority) {
                         //The cookie of the name is not set or the cookie set has a lower priority than the current cookie
                         $r[$cookie->name] = $cookie->value;

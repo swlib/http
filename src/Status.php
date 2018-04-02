@@ -6,7 +6,7 @@
  * Time: 下午2:27
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class Status
 {

@@ -6,7 +6,7 @@
  * Time: 下午2:23
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 use Psr\Http\Message\MessageInterface;
 

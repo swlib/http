@@ -1,6 +1,6 @@
 <?php
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 use Psr\Http\Message\UriInterface;
 

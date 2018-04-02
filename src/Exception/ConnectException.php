@@ -1,17 +1,17 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/4/1 上午12:53
  */
 
-namespace Swooler\Http\Exception;
+namespace Swlib\Http\Exception;
 
-class  ConnectException extends RequestException
+class ConnectException extends RequestException
 {
 
     public function __construct(
-        \Swooler\Http\Request $request,
+        \Swlib\Http\Request $request,
         int $code = 0,
         string $message = '',
         \Exception $previous = null

@@ -6,7 +6,7 @@
  * Time: 上午12:05
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class Cookie
 {
@@ -16,7 +16,7 @@ class Cookie
     public $expires = 0;
     public $path = '/';
     public $domain = '';
-    public $session = false;//会话cookie,没有过期时间,在浏览器关闭时清除
+    public $session = false; //会话cookie,没有过期时间,在浏览器关闭时清除
     public $secure = false;
     public $httponly = false;
     public $hostonly = true;
@@ -47,7 +47,8 @@ class Cookie
             trigger_error('cookie must have its name!', E_USER_ERROR);
         }
 
-        if (!empty($options['value']) && !isset($options['expires'])) {//有值但没有设定过期时间,是会话cookie
+        if (!empty($options['value']) && !isset($options['expires'])) {
+//有值但没有设定过期时间,是会话cookie
             $this->session = true;
             $this->expires = time();
         }
@@ -61,7 +62,7 @@ class Cookie
 
         //tip: (if it's necessary?)
         if (substr($this->path, 0, 1) !== '/') {
-            $this->path = '/' . $this->path;// complete the leftmost "/"
+            $this->path = '/' . $this->path; // complete the leftmost "/"
         }
 
         //check is it hostonly

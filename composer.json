@@ -1,5 +1,5 @@
 {
-  "name": "swooler/http",
+  "name": "swlib/http",
   "type": "library",
   "keywords": [
     "php",
@@ -7,7 +7,7 @@
     "http",
     "psr7"
   ],
-  "description": "Swooler-HTTP base class repository, PSR implementation",
+  "description": "Swlib-HTTP base class repository, PSR implementation",
   "license": "Apache-2.0",
   "authors": [
     {
@@ -21,7 +21,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Swooler\\Http\\": "src"
+      "Swlib\\Http\\": "src"
     }
   },
   "repositories": [

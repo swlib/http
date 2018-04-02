@@ -1,11 +1,11 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/1/23 下午2:23
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class BufferStream implements StreamInterface
 {

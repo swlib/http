@@ -1,13 +1,13 @@
 <?php
 /**
- * Copyright: Swooler
+ * Copyright: Swlib
  * Author: Twosee <twose@qq.com>
  * Date: 2018/3/25 下午7:09
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
-class  ContentType
+class ContentType
 {
     const TXT = 'text/plain';
     const HTML = 'text/html';

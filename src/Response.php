@@ -6,7 +6,7 @@
  * Time: 下午2:25
  */
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 use Psr\Http\Message\ResponseInterface;
 
@@ -59,7 +59,6 @@ class Response extends Message implements ResponseInterface
     {
         return $this->reasonPhrase;
     }
-
 
     public function __toString()
     {

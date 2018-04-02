@@ -1,6 +1,6 @@
 <?php
 
-namespace Swooler\Http;
+namespace Swlib\Http;
 
 class UploadFile
 {
@@ -81,4 +81,5 @@ class UploadFile
     {
         return $this->clientMediaType;
     }
+
 }
