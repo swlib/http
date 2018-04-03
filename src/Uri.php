@@ -288,14 +288,13 @@ class Uri implements UriInterface
             if (!($rel instanceof UriInterface)) {
                 $rel = new self($rel);
             }
-
             return UriResolver::resolve($base, $rel);
+        } elseif ($rel) {
+            return $rel instanceof UriInterface ? $rel : new self($rel);
+        } elseif ($base) {
+            return $base instanceof UriInterface ? $base : new self($base);
         } else {
-            if ($rel) {
-                return $rel instanceof UriInterface ? $rel : new self($rel);
-            } else {
-                return $base instanceof UriInterface ? $base : new self($base);
-            }
+            return null;
         }
     }
 
