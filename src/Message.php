@@ -22,6 +22,7 @@ class Message implements MessageInterface
     /**@var string */
     protected $protocolVersion = '1.1';
     /**@var [][]string */
+    protected $headerNames = [];
     protected $headers = [];
     /**@var StreamInterface */
     protected $body;
@@ -53,27 +54,21 @@ class Message implements MessageInterface
 
     public function hasHeader($name): bool
     {
-        return array_key_exists(strtolower($name), $this->headers);
-    }
-
-    public function getHeaderLine($name): string
-    {
-        $name = strtolower($name);
-        if (array_key_exists($name, $this->headers)) {
-            return implode(', ', $this->headers[$name]);
-        } else {
-            return '';
-        }
+        return isset($this->headerNames[strtolower($name)]);
     }
 
     public function getHeader($name): array
     {
-        $name = strtolower($name);
-        if (isset($this->headers[$name])) {
-            return $this->headers[$name];
+        if ($raw_name = ($this->headerNames[strtolower($name)] ?? false)) {
+            return $this->headers[$raw_name];
         } else {
             return [];
         }
+    }
+
+    public function getHeaderLine($name): string
+    {
+        return implode(', ', $this->getHeader($name));
     }
 
     /**
@@ -119,22 +114,22 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param string $name
+     * @param string $raw_name
      * @param $value
      * @return $this
      */
-    public function withHeader($name, $value): self
+    public function withHeader($raw_name, $value): self
     {
-        $name = strtolower($name);
-        if (isset($this->headers[$name])) {
+        $normalized = strtolower($raw_name);
+        if (isset($this->headerNames[$normalized])) {
             if ($value === null) {
-                unset($this->headers[$name]);
-
-                //重置顺序,删除
-                return $this;
+                return $this->withoutHeader($raw_name);
+            } else {
+                unset($this->headers[$this->headerNames[$normalized]]);
             }
         }
-        $this->headers[$name] = (array)$value;
+        $this->headerNames[$normalized] = $raw_name;
+        $this->headers[$raw_name] = self::trimHeaderValues((array)$value);
 
         return $this;
     }
@@ -153,15 +148,23 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param string $name
+     * @param string $raw_name
      * @param $value
      * @return $this
      */
-    public function withAddedHeader($name, $value): self
+    public function withAddedHeader($raw_name, $value): self
     {
-        $name = strtolower($name);
-        $value = (array)$value;
-        $this->headers[$name] = array_merge($this->headers[$name] ?? [], $value);
+        $normalized = strtolower($raw_name);
+        if (isset($this->headerNames[$normalized])) {
+            $raw_name = $this->headerNames[$normalized];
+        } else {
+            $this->headerNames[$normalized] = $raw_name;
+        }
+        $this->headers[$raw_name] =
+            array_merge(
+                $this->headers[$raw_name] ?? [],
+                self::trimHeaderValues((array)$value)
+            );
 
         return $this;
     }
@@ -172,9 +175,10 @@ class Message implements MessageInterface
      */
     public function withoutHeader($name): self
     {
-        $name = strtolower($name);
-        if (isset($this->headers[$name])) {
-            unset($this->headers[$name]);
+        $normalized = strtolower($name);
+        $raw_name = $this->headerNames[$normalized] ?? false;
+        if ($raw_name) {
+            unset($this->headers[$raw_name], $this->headerNames[$normalized]);
         }
 
         return $this;
@@ -195,4 +199,26 @@ class Message implements MessageInterface
 
         return $this;
     }
+
+    /**
+     * Trims whitespace from the header values.
+     *
+     * Spaces and tabs ought to be excluded by parsers when extracting the field value from a header field.
+     *
+     * header-field = field-name ":" OWS field-value OWS
+     * OWS          = *( SP / HTAB )
+     *
+     * @param string[] $values Header values
+     *
+     * @return string[] Trimmed header values
+     *
+     * @see https://tools.ietf.org/html/rfc7230#section-3.2.4
+     */
+    private static function trimHeaderValues(array $values)
+    {
+        return array_map(function ($value) {
+            return trim($value, " \t");
+        }, $values);
+    }
+
 }
