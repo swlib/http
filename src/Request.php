@@ -90,16 +90,36 @@ class Request extends Message implements RequestInterface
      * @param bool $autoHost
      * @return $this
      */
-    public function withUri(UriInterface $uri, $autoHost = false): self
+    public function withUri(?UriInterface $uri, $preserveHost = false): self
     {
         if ($uri !== $this->uri) {
             $this->uri = $uri;
-            if ($autoHost && !empty($host = $this->uri->getHost())) {
-                $this->withHeader('host', $host);
-            }
+        }
+        if (!$preserveHost) {
+            $this->updateHostFromUri();
         }
 
         return $this;
+    }
+
+    private function updateHostFromUri()
+    {
+        $host = $this->uri->getHost();
+        if ($host == '') {
+            return;
+        }
+        if (($port = $this->uri->getPort()) !== null) {
+            $host .= ':' . $port;
+        }
+        if (isset($this->headerNames['host'])) {
+            $raw_name = $this->headerNames['host'];
+        } else {
+            $raw_name = 'Host';
+            $this->headerNames['host'] = 'Host';
+        }
+        // Ensure Host is the first header.
+        // See: http://tools.ietf.org/html/rfc7230#section-5.4
+        $this->headers = [$raw_name => [$host]] + $this->headers;
     }
 
     public function getCookieParams(): array

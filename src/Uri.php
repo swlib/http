@@ -279,7 +279,7 @@ class Uri implements UriInterface
      *
      * @see UriResolver::resolve
      */
-    public static function resolve($base, $rel): UriInterface
+    public static function resolve($base, $rel): ?UriInterface
     {
         if ($base && $rel) {
             if (!($base instanceof UriInterface)) {
