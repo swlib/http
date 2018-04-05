@@ -62,7 +62,7 @@ class Response extends Message implements ResponseInterface
 
     public function __toString()
     {
-        $headers_array = $this->getHeaders(true, true);
+        $headers_array = $this->getHeaders(true);
         $headers = '';
         foreach ($headers_array as $name => $line) {
             if ($name === 'Set-Cookie') {
