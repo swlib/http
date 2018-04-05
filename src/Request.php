@@ -32,7 +32,7 @@ class Request extends Message implements RequestInterface
         $this->withUri($uri);
         $this->withMethod($method);
         if (!($body instanceof StreamInterface)) {
-            $body = new BufferStream($body);
+            $body = new BufferStream($body ?? '');
         }
         parent::__construct($headers, $body);
     }
