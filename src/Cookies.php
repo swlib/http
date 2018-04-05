@@ -157,7 +157,7 @@ class Cookies
             /** @var $cookie Cookie */
             foreach ($this->raw as $cookie) {
                 if ($cookie->isValid($uri)) {
-//Session cookie or unexpired && match domain path
+                    //Session cookie or unexpired && match domain path
                     $priority = strlen($cookie->domain); //Record priority, the higher the match, the higher the priority
                     if (!isset($r[$cookie->name]) || $priorities[$cookie->name] < $priority) {
                         //The cookie of the name is not set or the cookie set has a lower priority than the current cookie
@@ -211,6 +211,7 @@ class Cookies
         foreach ($kv as $k => $v) {
             $r .= $k . '=' . $v . '; ';
         }
+        $r = rtrim($r, '; ');
 
         return $r;
     }
@@ -229,6 +230,15 @@ class Cookies
         }
 
         return $r;
+    }
+
+    public function __clone()
+    {
+        $new = [];
+        foreach ($this->raw as $key => $cookie) {
+            $new[$key] = clone $cookie;
+        }
+        $this->raw = $new;
     }
 
 }

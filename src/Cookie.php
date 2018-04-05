@@ -48,7 +48,7 @@ class Cookie
         }
 
         if (!empty($options['value']) && !isset($options['expires'])) {
-//有值但没有设定过期时间,是会话cookie
+            //有值但没有设定过期时间,是会话cookie
             $this->session = true;
             $this->expires = time();
         }
