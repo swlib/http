@@ -24,10 +24,16 @@ class Request extends Message implements RequestInterface
     protected $parsedBody;
     protected $uploadFiles = [];
 
-    function __construct(?Uri $uri = null, string $method = 'GET', array $headers = [], ?StreamInterface $body = null)
+    function __construct($uri = '', string $method = 'GET', array $headers = [], $body = null)
     {
+        if (!($uri instanceof UriInterface)) {
+            $uri = new Uri($uri);
+        }
         $this->withUri($uri);
         $this->withMethod($method);
+        if (!($body instanceof StreamInterface)) {
+            $body = new BufferStream($body);
+        }
         parent::__construct($headers, $body);
     }
 
