@@ -9,6 +9,7 @@
 namespace Swlib\Http;
 
 use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
@@ -22,7 +23,7 @@ class Request extends Message implements RequestInterface
     protected $cookieParams = [];
     protected $queryParams = [];
     protected $parsedBody;
-    protected $uploadFiles = [];
+    protected $uploadedFiles = [];
 
     function __construct($uri = '', string $method = 'GET', array $headers = [], $body = null)
     {
@@ -224,35 +225,49 @@ class Request extends Message implements RequestInterface
         return $this;
     }
 
-    public function getUploadFile(string $name): UploadFile
+    public function getUploadedFile(string $name): UploadedFileInterface
     {
-        return $this->uploadFiles[$name] ?? null;
+        return $this->uploadedFiles[$name] ?? null;
     }
 
-    public function getUploadFiles(): array
+    public function getUploadedFiles(): array
     {
-        return $this->uploadFiles;
+        return $this->uploadedFiles;
     }
 
     /**
-     * @param UploadFile $uploadFile
+     * @param UploadedFileInterface $uploadedFile
      * @return $this
      */
-    public function withUploadFile(UploadFile $uploadFile): self
+    public function withUploadedFile(string $name, ?UploadedFileInterface $uploadedFile): self
     {
-        $this->uploadFiles[] = $uploadFile;
+        if ($uploadedFile === null) {
+            $this->withoutUploadedFile($name);
+        } else {
+            $this->uploadedFiles[$name] = $uploadedFile;
+        }
+
+        return $this;
+    }
+
+    /** @return $this */
+    public function withoutUploadedFile(string $name): self
+    {
+        if (isset($this->uploadedFiles[$name])) {
+            unset($this->uploadedFiles[$name]);
+        }
 
         return $this;
     }
 
     /**
-     * @param UploadFile[] $uploadFile must be array of UploadFile Instance
+     * @param UploadedFileInterface[] $uploadedFile must be array of UploadedFile Instance
      *
      * @return Request
      */
-    public function withUploadFiles(array $uploadFiles): self
+    public function withUploadedFiles(array $uploadedFiles): self
     {
-        $this->uploadFiles = $uploadFiles;
+        $this->uploadedFiles = $uploadedFiles;
 
         return $this;
     }
