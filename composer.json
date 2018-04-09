@@ -8,7 +8,7 @@
     "psr7"
   ],
   "description": "Swlib-HTTP base class repository, PSR implementation",
-  "license": "Apache-2.0",
+  "license": "MIT",
   "authors": [
     {
       "name": "twosee",
@@ -32,7 +32,7 @@
   },
   "require-dev": {
     "eaglewu/swoole-ide-helper": "dev-master",
-    "phpunit/phpunit": "^5.7"
+    "phpunit/phpunit": "~7"
   },
   "scripts": {
     "test": "./vendor/bin/phpunit -c phpunit.xml"
