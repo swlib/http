@@ -16,7 +16,7 @@ trait CookiesManagerTrait
     /**@var Cookies * */
     public $incremental_cookies;
 
-    public function initialization(bool $incremental = false)
+    private function __cookiesInitialization(bool $incremental = false)
     {
         $this->cookies = new Cookies();
         if ($incremental) {
