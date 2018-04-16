@@ -89,28 +89,46 @@ class Message implements MessageInterface
             }
 
             return $headers;
-        } else {
-            if ($ucwords) {
-                $headers = [];
-                foreach ($this->headers as $key => $val) {
-                    $key = ucwords($key, '-');
-                    $headers[$key] = $val;
-                }
-
-                return $headers;
-            } else {
-                if ($implode) {
-                    $headers = [];
-                    foreach ($this->headers as $key => $val) {
-                        $headers[$key] = implode(', ', $val);
-                    }
-
-                    return $headers;
-                }
+        } elseif ($ucwords) {
+            $headers = [];
+            foreach ($this->headers as $key => $val) {
+                $key = ucwords($key, '-');
+                $headers[$key] = $val;
             }
+
+            return $headers;
+        } elseif ($implode) {
+            $headers = [];
+            foreach ($this->headers as $key => $val) {
+                $headers[$key] = implode(', ', $val);
+            }
+
+            return $headers;
         }
 
         return $this->headers;
+    }
+
+    public function getHeadersString(bool $ucwords = true): string
+    {
+        $headers = '';
+        foreach ($this->headers as $name => $values) {
+            if (strtolower($name) === 'set-cookie') {
+                $set_cookie_array = $this->headers[$this->headerNames['set-cookie']];
+                foreach ($set_cookie_array as $val) {
+                    $headers .= "Set-Cookie: $val\r\n";
+                }
+            } else {
+                $line = implode(', ', $values);
+                if ($ucwords) {
+                    $name = ucwords($name, '-');
+                }
+                $headers .= "$name: $line\r\n";
+            }
+        }
+        $headers = substr($headers, 0, -2);
+
+        return $headers;
     }
 
     /**

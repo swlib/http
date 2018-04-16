@@ -62,22 +62,9 @@ class Response extends Message implements ResponseInterface
 
     public function __toString()
     {
-        $headers_array = $this->getHeaders(true);
-        $headers = '';
-        foreach ($headers_array as $name => $line) {
-            if ($name === 'Set-Cookie') {
-                $set_cookie_array = $this->getHeader('set-cookie');
-                foreach ($set_cookie_array as $val) {
-                    $headers .= "Set-Cookie: $val\n";
-                }
-            } else {
-                $headers .= "$name: $line\n";
-            }
-        }
-        $headers = rtrim($headers, "\n");
-
         return
-            'HTTP/' . $this->getProtocolVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getReasonPhrase() . "\n" .
-            $headers . "\r\n\r\n" . $this->getBody();
+            'HTTP/' . $this->getProtocolVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getReasonPhrase() . "\r\n" .
+            $this->getHeadersString() . "\r\n\r\n" .
+            $this->getBody();
     }
 }

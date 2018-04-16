@@ -555,6 +555,21 @@ class Uri implements UriInterface
         return $this;
     }
 
+    /**
+     * @param string|array $query
+     * @return $this|static
+     */
+    public function withAddedQuery($query): self
+    {
+        parse_str($this->getQuery(), $old);
+        if (is_string($query)) {
+            parse_str($query, $query);
+        }
+        $this->withQuery($query + $old);
+
+        return $this;
+    }
+
     public function withFragment($fragment)
     {
         $fragment = $this->filterQueryAndFragment($fragment);
