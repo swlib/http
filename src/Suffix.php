@@ -805,7 +805,7 @@ class Suffix
         return self::MAP[$contentType] ?? [];
     }
 
-    public static function getFirst(string $contentType):string
+    public static function getFirst(string $contentType): string
     {
         return self::MAP[$contentType][0] ?? '';
     }
