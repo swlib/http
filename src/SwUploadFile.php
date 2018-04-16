@@ -28,7 +28,7 @@ class SwUploadFile implements UploadedFileInterface
         $this->clientFileName = $file_nickname ?? null ?: basename($this->stream);
         $this->clientMediaType = $clientMediaType ?? null ?:
                 (($extension = pathinfo($file_path, PATHINFO_EXTENSION)) ?
-                    ContentType::getContentType($extension) :
+                    ContentType::get($extension) :
                     null
                 );
         $this->offset = $offset ?? 0;
@@ -78,9 +78,9 @@ class SwUploadFile implements UploadedFileInterface
     /**
      * Get file size
      *
-     * @return mixed
+     * @return int|null
      */
-    public function getSize(): int
+    public function getSize(): ?int
     {
         return $this->size;
     }
