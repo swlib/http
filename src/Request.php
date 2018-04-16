@@ -28,13 +28,10 @@ class Request extends Message implements RequestInterface
     function __construct($uri = '', string $method = 'GET', array $headers = [], $body = null)
     {
         if (!($uri instanceof UriInterface)) {
-            $uri = new Uri($uri);
+            $uri = new Uri($uri); // request must has uri
         }
         $this->withUri($uri);
         $this->withMethod($method);
-        if (!($body instanceof StreamInterface)) {
-            $body = new BufferStream((string)$body);
-        }
         parent::__construct($headers, $body);
     }
 

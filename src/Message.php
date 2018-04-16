@@ -27,10 +27,12 @@ class Message implements MessageInterface
     /**@var StreamInterface */
     protected $body;
 
-    function __construct(array $headers = [], ?StreamInterface $body = null)
+    function __construct(array $headers = [], $body = null)
     {
         $this->withHeaders($headers);
-        $this->withBody($body);
+        if ($body !== '' && $body !== null) {
+            $this->withBody($body);
+        }
     }
 
     public function getProtocolVersion(): string
@@ -202,18 +204,36 @@ class Message implements MessageInterface
         return $this;
     }
 
-    public function getBody(): ?StreamInterface
+    /**
+     * @return null|\Psr\Http\Message\StreamInterface|StreamInterface
+     */
+    public function getBody(): ?\Psr\Http\Message\StreamInterface
     {
+        if (!isset($this->body)) {
+            $this->body = new BufferStream();
+        }
+
         return $this->body;
     }
 
     /**
-     * @param null|StreamInterface $body
+     * @param null|\Psr\Http\Message\StreamInterface|StreamInterface $body
      * @return $this
      */
-    public function withBody($body): self
+    public function withBody(?\Psr\Http\Message\StreamInterface $body): self
     {
-        $this->body = $body;
+        if ($body === $this->body) {
+            return $this;
+        }
+        if ($body === null) {
+            if (method_exists($this->body, 'clear')) {
+                $this->body->clear();
+            } else {
+                $this->body = new BufferStream();
+            }
+        } else {
+            $this->body = $body;
+        }
 
         return $this;
     }
