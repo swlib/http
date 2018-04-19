@@ -16,6 +16,23 @@ class Response extends Message implements ResponseInterface
     protected $statusCode = Status::OK;
     protected $reasonPhrase = 'OK';
 
+    function __construct(
+        $status = Status::OK,
+        array $headers = [],
+        $body = null,
+        string $version = '1.1',
+        string $reason = null
+    ) {
+        $this->statusCode = (int)$status;
+        parent::__construct($headers, $body);
+        if ($reason == '') {
+            $this->reasonPhrase = Status::getReasonPhrase($this->statusCode);
+        } else {
+            $this->reasonPhrase = (string)$reason;
+        }
+        $this->protocolVersion = $version;
+    }
+
     /**
      * Get status code
      *
@@ -36,18 +53,14 @@ class Response extends Message implements ResponseInterface
      */
     public function withStatus($code, $reasonPhrase = '')
     {
-        if ($code === $this->statusCode) {
-            return $this;
+        $this->statusCode = (int)$code;
+        if ($reasonPhrase == '') {
+            $this->reasonPhrase = Status::getReasonPhrase($this->statusCode);
         } else {
-            $this->statusCode = $code;
-            if (empty($reasonPhrase)) {
-                $this->reasonPhrase = Status::getReasonPhrase($this->statusCode);
-            } else {
-                $this->reasonPhrase = $reasonPhrase;
-            }
-
-            return $this;
+            $this->reasonPhrase = $reasonPhrase;
         }
+
+        return $this;
     }
 
     /**

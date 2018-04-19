@@ -63,7 +63,7 @@ class Uri implements UriInterface
     /**
      * @param string $uri URI to parse
      */
-    public function __construct($uri = '')
+    public function __construct(string $uri = '')
     {
         // weak type check to also accept null until we can add scalar type hints
         if ($uri != '') {
@@ -374,7 +374,7 @@ class Uri implements UriInterface
      * @return UriInterface
      * @link http://php.net/manual/en/function.parse-url.php
      *
-     * @throws \InvalidArgumentException If the components do not form a valid URI.
+     * @throws \TypeError If the components do not form a valid URI.
      */
     public static function fromParts(array $parts): UriInterface
     {
@@ -415,6 +415,11 @@ class Uri implements UriInterface
     }
 
     public function getPort()
+    {
+        return $this->port;
+    }
+
+    public function getRealPort()
     {
         return $this->port ?? (self::$defaultPorts[$this->scheme] ?? null);
     }
@@ -621,7 +626,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the scheme is invalid.
+     * @throws \TypeError If the scheme is invalid.
      */
     private function filterScheme(string $scheme): string
     {
@@ -633,7 +638,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the host is invalid.
+     * @throws \TypeError If the host is invalid.
      */
     private function filterHost(string $host): string
     {
@@ -649,7 +654,7 @@ class Uri implements UriInterface
      *
      * @return int|null
      *
-     * @throws \InvalidArgumentException If the port is invalid.
+     * @throws \TypeError If the port is invalid.
      */
     private function filterPort(?int $port): ?int
     {
@@ -681,7 +686,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the path is invalid.
+     * @throws \TypeError If the path is invalid.
      */
     private function filterPath(string $path): string
     {
@@ -699,7 +704,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \InvalidArgumentException If the query or fragment is invalid.
+     * @throws \TypeError If the query or fragment is invalid.
      */
     private function filterQueryAndFragment(string $str): string
     {

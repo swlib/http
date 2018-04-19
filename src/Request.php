@@ -25,14 +25,14 @@ class Request extends Message implements RequestInterface
     protected $parsedBody;
     protected $uploadedFiles = [];
 
-    function __construct($uri = '', string $method = 'GET', array $headers = [], $body = null)
+    function __construct(string $method = 'GET', $uri = '', array $headers = [], $body = null)
     {
+        parent::__construct($headers, $body);
         if (!($uri instanceof UriInterface)) {
             $uri = new Uri($uri); // request must has uri
         }
-        $this->withUri($uri);
+        $this->withUri($uri, $this->hasHeader('Host'));
         $this->withMethod($method);
-        parent::__construct($headers, $body);
     }
 
     public function getRequestTarget(): string
@@ -59,7 +59,7 @@ class Request extends Message implements RequestInterface
     public function withRequestTarget($requestTarget): self
     {
         if (preg_match('/\s/', $requestTarget)) {
-            throw new InvalidArgumentException(
+            throw new \InvalidArgumentException(
                 'Invalid request target provided; cannot contain whitespace'
             );
         }
@@ -267,6 +267,17 @@ class Request extends Message implements RequestInterface
         $this->uploadedFiles = $uploadedFiles;
 
         return $this;
+    }
+
+    public function __toString()
+    {
+        $req = trim($this->getMethod() . ' ' . $this->getRequestTarget()) . ' HTTP/' . $this->getProtocolVersion();
+        if (!$this->hasHeader('host')) {
+            $req .= "\r\nHost: " . $this->getUri()->getHost();
+        }
+        $req .= $this->getHeadersString() . "\r\n\r\n" . $this->getBody();
+
+        return $req;
     }
 
 }

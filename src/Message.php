@@ -29,9 +29,9 @@ class Message implements MessageInterface
 
     function __construct(array $headers = [], $body = null)
     {
-        $this->withHeaders($headers);
+        $this->withAddedHeaders($headers);
         if ($body !== '' && $body !== null) {
-            $this->withBody($body);
+            $this->body = stream_for($body);
         }
     }
 
@@ -142,10 +142,9 @@ class Message implements MessageInterface
     {
         $normalized = strtolower($raw_name);
         if (isset($this->headerNames[$normalized])) {
+            $this->withoutHeader($raw_name);
             if ($value === null) {
-                return $this->withoutHeader($raw_name);
-            } else {
-                unset($this->headers[$this->headerNames[$normalized]]);
+                return $this;
             }
         }
         $this->headerNames[$normalized] = $raw_name;
@@ -166,6 +165,16 @@ class Message implements MessageInterface
 
         return $this;
     }
+
+    public function withAddedHeaders(array $headers): self
+    {
+        foreach ($headers as $name => $value) {
+            $this->withAddedHeader($name, $value);
+        }
+
+        return $this;
+    }
+
 
     /**
      * @param string $raw_name
@@ -210,7 +219,7 @@ class Message implements MessageInterface
     public function getBody(): ?\Psr\Http\Message\StreamInterface
     {
         if (!isset($this->body)) {
-            $this->body = new BufferStream();
+            $this->body = stream_for('');
         }
 
         return $this->body;
@@ -229,7 +238,7 @@ class Message implements MessageInterface
             if (method_exists($this->body, 'clear')) {
                 $this->body->clear();
             } else {
-                $this->body = new BufferStream();
+                $this->body = stream_for('');
             }
         } else {
             $this->body = $body;

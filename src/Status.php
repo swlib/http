@@ -59,7 +59,7 @@ class Status
     const INSUFFICIENT_STORAGE = 507;
     const BANDWIDTH_LIMIT_EXCEEDED = 509;
 
-    private static $phrases = [
+    const PHRASES = [
         100 => 'Continue',
         101 => 'Switching Protocols',
         102 => 'Processing',
@@ -122,7 +122,7 @@ class Status
 
     public static function getReasonPhrase(int $statusCode): string
     {
-        return self::$phrases[$statusCode] ?? 'Failed';
+        return self::PHRASES[$statusCode] ?? 'Unknown';
     }
 
 }

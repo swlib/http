@@ -1,4 +1,5 @@
 <?php
+
 namespace Swlib\Http;
 
 use Psr\Http\Message\StreamInterface;
@@ -27,7 +28,7 @@ class PumpStream implements StreamInterface
     /** @var array */
     private $metadata;
 
-    /** @var BufferStream */
+    /** @var StringStream */
     private $buffer;
 
     /**
@@ -36,7 +37,7 @@ class PumpStream implements StreamInterface
      *                         amount of data to return. The callable MUST
      *                         return a string when called, or false on error
      *                         or EOF.
-     * @param array $options   Stream options:
+     * @param array $options Stream options:
      *                         - metadata: Hash of metadata to use with stream.
      *                         - size: Size of the stream, if known.
      */
@@ -45,7 +46,7 @@ class PumpStream implements StreamInterface
         $this->source = $source;
         $this->size = isset($options['size']) ? $options['size'] : null;
         $this->metadata = isset($options['metadata']) ? $options['metadata'] : [];
-        $this->buffer = new BufferStream();
+        $this->buffer = new StringStream();
     }
 
     public function __toString()

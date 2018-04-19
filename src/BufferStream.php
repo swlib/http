@@ -13,9 +13,9 @@ class BufferStream implements StreamInterface
     public $pos = 0;
     private $writable = true;
 
-    public function __construct(string $data = '')
+    public function __construct(string $data = '', ?int $length = null)
     {
-        $length = max(strlen($data), 32);
+        $length = $length ?? max(strlen($data), 32);
         $this->buffer = new \Swoole\Buffer($length);
         $this->write($data);
     }
@@ -125,7 +125,7 @@ class BufferStream implements StreamInterface
      */
     public function eof()
     {
-        throw new \BadMethodCallException('Not implement!');
+        return $this->pos >= $this->buffer->length;
     }
 
     /**
@@ -216,7 +216,10 @@ class BufferStream implements StreamInterface
      */
     public function read($length): string
     {
-        return $this->buffer->read($this->pos, $length);
+        $pos = $this->pos;
+        $this->pos = min($pos + $length, $this->getSize());
+        $length = $this->pos - $pos;
+        return $this->buffer->read($pos, $length) ?: '';
     }
 
     /**
@@ -245,7 +248,7 @@ class BufferStream implements StreamInterface
      */
     public function getMetadata($key = null)
     {
-        throw new \BadMethodCallException('Not implement!');
+        return null;
     }
 
 }

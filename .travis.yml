@@ -1,0 +1,15 @@
+language: php
+
+php:
+  - 7.0
+  - 7.1
+  - 7.2
+
+install:
+  - printf "\n" | pecl install -f swoole
+
+before_script:
+  - phpenv config-rm xdebug.ini
+  - composer update
+
+script: composer test
