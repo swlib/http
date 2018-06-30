@@ -43,8 +43,19 @@ class Cookie
     private function init(array $options, array $default = []): void
     {
         $options = array_merge($default, $options);
-        if (empty($options['name'])) {
-            trigger_error('cookie must have its name!', E_USER_ERROR);
+
+        //Check if the cookie is valid according to RFC 6265
+        if (empty($options['name']) && !is_numeric($options['name'])) {
+            throw new \InvalidArgumentException('Cookie must have its name!');
+        }
+
+        // Check if any of the invalid characters are present in the cookie name
+        if (preg_match('/[\x00-\x20\x22\x28-\x29\x2c\x2f\x3a-\x40\x5c\x7b\x7d\x7f]/', $options['name'])) {
+            throw new \InvalidArgumentException(
+                'Cookie name must not contain invalid characters: ASCII '
+                . 'Control characters (0-31;127), space, tab and the '
+                . 'following characters: ()<>@,;:\"/?={}'
+            );
         }
 
         if (!empty($options['value']) && !isset($options['expires'])) {
@@ -132,7 +143,7 @@ class Cookie
     }
 
     /**
-     * Convert a Cookie object to a Header string
+     * Convert a Cookie object to a Set-Cookie Header string
      *
      * @return string
      */

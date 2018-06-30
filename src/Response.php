@@ -77,7 +77,7 @@ class Response extends Message implements ResponseInterface
     {
         return
             'HTTP/' . $this->getProtocolVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getReasonPhrase() . "\r\n" .
-            $this->getHeadersString() . "\r\n\r\n" .
-            $this->getBody();
+            $this->getHeadersString() .
+            (($body = $this->getBody())->getSize() > 0 ? "\r\n\r\n" . $body : '');
     }
 }

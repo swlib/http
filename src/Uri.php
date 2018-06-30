@@ -70,6 +70,9 @@ class Uri implements UriInterface
             $parts = parse_url($uri);
             if ($parts === false) {
                 throw new \InvalidArgumentException("Unable to parse URI: $uri");
+            } elseif (!empty($parts['path']) && $parts['path'] === $uri) {
+                $fixed_uri = 'http://' . ltrim($uri, '/');
+                $parts = parse_url($fixed_uri);
             }
             $this->applyParts($parts);
         }
