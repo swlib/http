@@ -9,6 +9,7 @@ namespace Swlib\Http\Exception;
 
 use Swlib\Http\Request;
 use Swlib\Http\Response;
+use Swlib\Http\Status;
 
 /**
  * Exception when a server error is encountered (5xx codes)
