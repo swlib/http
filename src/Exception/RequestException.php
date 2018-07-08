@@ -55,7 +55,7 @@ class RequestException extends TransferException
         // Matches any printable character, including unicode characters:
         // letters, marks, numbers, punctuation, spacing, and separators.
         if (preg_match('/[^\pL\pM\pN\pP\pS\pZ\n\r\t]/', $summary)) {
-            return null;
+            return '';
         }
 
         return $summary;

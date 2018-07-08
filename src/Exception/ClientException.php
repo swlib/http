@@ -9,6 +9,7 @@ namespace Swlib\Http\Exception;
 
 use Swlib\Http\Request;
 use Swlib\Http\Response;
+use Swlib\Http\Status;
 
 /**
  * Exception when a client error is encountered (4xx codes)
@@ -19,9 +20,10 @@ class ClientException extends BadResponseException
         Request $request,
         ?Response $response,
         int $code = 0,
-        string $message = 'Client Error occurred!',
+        string $message = null,
         \Exception $previous = null
     ) {
+        $message = $message ?: "Client Error #{$code}: " . Status::getReasonPhrase($code) . '!';
         parent::__construct($request, $response, $code, $message, $previous);
     }
 }

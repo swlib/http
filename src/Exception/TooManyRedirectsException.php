@@ -22,7 +22,8 @@ class TooManyRedirectsException extends RequestException
         \Exception $previous = null
     ) {
         $this->redirect_headers = $redirects;
-        $message = "Too many redirects occurred!";
+        $times = count($redirects);
+        $message = "Too many redirects! more than {$times} times!";
         parent::__construct($request, $response, $code, $message, $previous);
     }
 
