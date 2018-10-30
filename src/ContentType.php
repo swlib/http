@@ -78,6 +78,7 @@ class ContentType
         'mp4s' => 'application/mp4',
         'm4p' => 'application/mp4',
         'doc' => 'application/msword',
+        'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'dot' => 'application/msword',
         'mxf' => 'application/mxf',
         'bin' => 'application/octet-stream',
@@ -343,7 +344,34 @@ class ContentType
         'ogv' => 'video/ogg',
         'qt' => 'video/quicktime',
         'mov' => 'video/quicktime',
-        'webm' => 'video/webm'
+        'webm' => 'video/webm',
+        // https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
+        'aac' => 'audio/aac',
+        'abw' => 'application/x-abiword',
+        'arc' => 'application/octet-stream',
+        'avi' => 'video/x-msvideo',
+        'azw' => 'application/vnd.amazon.ebook',
+        'bz' => 'application/x-bzip',
+        'bz2' => 'application/x-bzip2',
+        'csh' => 'application/x-csh',
+        'eot' => 'application/vnd.ms-fontobject',
+        'es' => 'application/ecmascript',
+        'ico' => 'image/x-icon',
+        'mpkg' => 'application/vnd.apple.installer+xml',
+        'odp' => 'application/vnd.oasis.opendocument.presentation',
+        'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+        'odt' => 'application/vnd.oasis.opendocument.text',
+        'ppt' => 'application/vnd.ms-powerpoint',
+        'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'rar' => 'application/x-rar-compressed',
+        'sh' => 'application/x-sh',
+        'swf' => 'application/x-shockwave-flash',
+        'tar' => 'application/x-tar',
+        'vsd' => 'application/vnd.visio',
+        'xls' => 'application/vnd.ms-excel',
+        'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'xul' => 'application/vnd.mozilla.xul+xml',
+        '7z' => 'application/x-7z-compressed'
     ];
 
     const TXT = 'text/plain';
