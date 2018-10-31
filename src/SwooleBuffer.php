@@ -48,7 +48,7 @@ class SwooleBuffer implements StreamInterface
      *
      * @return $this
      */
-    public function overWrite(string $data = ''): self
+    public function overWrite(string $data = null): self
     {
         If ($this->writable && $data !== '') {
             $this->buffer->clear();

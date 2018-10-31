@@ -7,7 +7,7 @@
 
 namespace Swlib\Http;
 
-Class PHPMemory implements \Psr\Http\Message\StreamInterface
+Class PHPMemory implements StreamInterface
 {
 
     private $stream;
@@ -52,7 +52,7 @@ Class PHPMemory implements \Psr\Http\Message\StreamInterface
         'a+' => true
     ];
 
-    function __construct($resource = '', $mode = 'r+')
+    public function __construct($resource = '', $mode = 'r+')
     {
         switch (gettype($resource)) {
             case 'resource':
@@ -100,8 +100,7 @@ Class PHPMemory implements \Psr\Http\Message\StreamInterface
     public function __toString()
     {
         try {
-            $this->seek(0);
-
+            $this->rewind();
             return (string)stream_get_contents($this->stream);
         } catch (\Exception $e) {
             return '';
@@ -288,6 +287,22 @@ Class PHPMemory implements \Psr\Http\Message\StreamInterface
     public function truncate($size = 0)
     {
         return ftruncate($this->stream, $size);
+    }
+
+    public function clear()
+    {
+        return $this->truncate(0);
+    }
+
+    public function overWrite(string $data = null)
+    {
+        if ($data === '' || $data === null) {
+            $this->clear();
+        } else {
+            $this->rewind();
+            $this->write($data);
+            $this->truncate(strlen($data));
+        }
     }
 
 }

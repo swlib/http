@@ -12,6 +12,6 @@ interface StreamInterface extends \Psr\Http\Message\StreamInterface
 
     public function clear();
 
-    public function overWrite();
+    public function overWrite(string $data = null);
 
 }
