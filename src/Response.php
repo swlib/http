@@ -75,9 +75,7 @@ class Response extends Message implements ResponseInterface
 
     public function __toString()
     {
-        return
-            'HTTP/' . $this->getProtocolVersion() . ' ' . $this->getStatusCode() . ' ' . $this->getReasonPhrase() . "\r\n" .
-            $this->getHeadersString() .
-            (($body = $this->getBody())->getSize() > 0 ? "\r\n\r\n" . $body : '');
+        return "HTTP/{$this->getProtocolVersion()} {$this->getStatusCode()} {$this->getReasonPhrase()}\r\n" .
+            "{$this->getHeadersString()}\r\n\r\n" . ($this->hasBody() ? $this->getBody() : '');
     }
 }

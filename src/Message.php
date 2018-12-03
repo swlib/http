@@ -214,9 +214,17 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return null|\Psr\Http\Message\StreamInterface|StreamInterface
+     * @return int if empty 0 else bodySize
      */
-    public function getBody(): ?\Psr\Http\Message\StreamInterface
+    public function hasBody(): int
+    {
+        return $this->body ? $this->body->getSize() : 0;
+    }
+
+    /**
+     * @return \Psr\Http\Message\StreamInterface|StreamInterface
+     */
+    public function getBody(): \Psr\Http\Message\StreamInterface
     {
         if (!isset($this->body)) {
             $this->body = stream_for('');
