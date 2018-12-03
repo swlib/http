@@ -20,10 +20,12 @@ class ClientException extends BadResponseException
         Request $request,
         ?Response $response,
         int $code = 0,
-        string $message = null,
+        string $message = 'Client side error, please check your configurations and permissions!',
         \Exception $previous = null
     ) {
-        $message = $message ?: "Client Error #{$code}: " . Status::getReasonPhrase($code) . '!';
+        if ($code === Status::NOT_FOUND) {
+            $message = "Your request uri {$request->getUri()} is wrong, please check it and try again!";
+        }
         parent::__construct($request, $response, $code, $message, $previous);
     }
 }

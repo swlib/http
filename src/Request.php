@@ -271,11 +271,11 @@ class Request extends Message implements RequestInterface
 
     public function __toString()
     {
-        $req = trim($this->getMethod() . ' ' . $this->getRequestTarget()) . ' HTTP/' . $this->getProtocolVersion();
+        $req = trim("{$this->getMethod()} {$this->getRequestTarget()}") . " HTTP/{$this->getProtocolVersion()}\r\n";
         if (!$this->hasHeader('host')) {
-            $req .= "\r\nHost: " . $this->getUri()->getHost();
+            $req .= "Host: {$this->getUri()->getHost()}\r\n";
         }
-        $req .= $this->getHeadersString() . "\r\n\r\n" . $this->getBody();
+        $req .= "{$this->getHeadersString()}\r\n\r\n" . ($this->hasBody() ? $this->getBody() : '');
 
         return $req;
     }

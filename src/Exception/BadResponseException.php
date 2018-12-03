@@ -16,10 +16,9 @@ class BadResponseException extends RequestException
         Request $request,
         ?Response $response,
         int $code = 0,
-        string $message = null,
+        string $message = 'Unknown Bad Response Error occurred!',
         \Exception $previous = null
     ) {
-        $message = $message ?: "Unknown Bad Response Error #{$code} occurred!";
         parent::__construct($request, $response, $code, $message, $previous);
     }
 }

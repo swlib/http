@@ -26,7 +26,8 @@ class RequestException extends TransferException
         \Exception $previous = null
     ) {
         $code = $code ? $code : ($response ? $response->getStatusCode() : 0);
-        parent::__construct($message, $code, $previous);
+        $phrase = $response->getReasonPhrase();
+        parent::__construct("HTTP {$code} {$phrase}: {$message}", $code, $previous);
         $this->request = $request;
         $this->response = $response;
     }
