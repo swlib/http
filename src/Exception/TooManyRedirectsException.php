@@ -7,6 +7,7 @@
 
 namespace Swlib\Http\Exception;
 
+use Exception;
 use Swlib\Http\Request;
 use Swlib\Http\Response;
 
@@ -19,7 +20,7 @@ class TooManyRedirectsException extends RequestException
         ?Response $response,
         int $code = 0,
         array $redirects,
-        \Exception $previous = null
+        Exception $previous = null
     ) {
         $this->redirect_headers = $redirects;
         $times = count($redirects);

@@ -7,6 +7,7 @@
 
 namespace Swlib\Http;
 
+use BadMethodCallException;
 use Psr\Http\Message\UploadedFileInterface;
 
 class SwUploadFile implements UploadedFileInterface
@@ -114,7 +115,7 @@ class SwUploadFile implements UploadedFileInterface
      */
     public function moveTo($targetPath)
     {
-        throw new \BadMethodCallException('Are you dreaming?');
+        throw new BadMethodCallException('Are you dreaming?');
     }
 
     /**
@@ -124,7 +125,7 @@ class SwUploadFile implements UploadedFileInterface
      */
     public function getError()
     {
-        throw new \BadMethodCallException('Nop');
+        throw new BadMethodCallException('Nop');
     }
 
 }

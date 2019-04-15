@@ -2,6 +2,7 @@
 namespace Swlib\Http;
 
 use Psr\Http\Message\StreamInterface;
+use RuntimeException;
 
 
 /**
@@ -71,7 +72,7 @@ class LimitStream implements StreamInterface
     public function seek($offset, $whence = SEEK_SET)
     {
         if ($whence !== SEEK_SET || $offset < 0) {
-            throw new \RuntimeException(sprintf(
+            throw new RuntimeException(sprintf(
                 'Cannot seek to offset % with whence %s',
                 $offset,
                 $whence
@@ -103,7 +104,7 @@ class LimitStream implements StreamInterface
      *
      * @param int $offset Offset to seek to and begin byte limiting from
      *
-     * @throws \RuntimeException if the stream cannot be seeked.
+     * @throws RuntimeException if the stream cannot be seeked.
      */
     public function setOffset($offset)
     {
@@ -114,7 +115,7 @@ class LimitStream implements StreamInterface
             if ($this->stream->isSeekable()) {
                 $this->stream->seek($offset);
             } elseif ($current > $offset) {
-                throw new \RuntimeException("Could not seek to stream offset $offset");
+                throw new RuntimeException("Could not seek to stream offset $offset");
             } else {
                 $this->stream->read($offset - $current);
             }

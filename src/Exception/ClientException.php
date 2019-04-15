@@ -7,6 +7,7 @@
 
 namespace Swlib\Http\Exception;
 
+use Exception;
 use Swlib\Http\Request;
 use Swlib\Http\Response;
 use Swlib\Http\Status;
@@ -21,7 +22,7 @@ class ClientException extends BadResponseException
         ?Response $response,
         int $code = 0,
         string $message = 'Client side error, please check your configurations and permissions!',
-        \Exception $previous = null
+        Exception $previous = null
     ) {
         if ($code === Status::NOT_FOUND) {
             $message = "Your request uri {$request->getUri()} is wrong, please check it and try again!";

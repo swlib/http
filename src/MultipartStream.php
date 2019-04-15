@@ -1,6 +1,7 @@
 <?php
 namespace Swlib\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -23,7 +24,7 @@ class MultipartStream implements StreamInterface
      *                         string to send as the filename in the part.
      * @param string $boundary You can optionally provide a specific boundary
      *
-     * @throws \InvalidArgumentException
+     * @throws InvalidArgumentException
      */
     public function __construct(array $elements = [], $boundary = null)
     {
@@ -80,7 +81,7 @@ class MultipartStream implements StreamInterface
     {
         foreach (['contents', 'name'] as $key) {
             if (!array_key_exists($key, $element)) {
-                throw new \InvalidArgumentException("A '{$key}' key is required");
+                throw new InvalidArgumentException("A '{$key}' key is required");
             }
         }
 

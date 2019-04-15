@@ -2,7 +2,9 @@
 
 namespace Swlib\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\UriInterface;
+use TypeError;
 
 /**
  * PSR-7 URI implementation, **From guzzle and make some changes.**
@@ -69,7 +71,7 @@ class Uri implements UriInterface
         if ($uri != '') {
             $parts = parse_url($uri);
             if ($parts === false) {
-                throw new \InvalidArgumentException("Unable to parse URI: $uri");
+                throw new InvalidArgumentException("Unable to parse URI: $uri");
             }
             $this->applyParts($parts);
         }
@@ -374,7 +376,7 @@ class Uri implements UriInterface
      * @return UriInterface
      * @link http://php.net/manual/en/function.parse-url.php
      *
-     * @throws \TypeError If the components do not form a valid URI.
+     * @throws TypeError If the components do not form a valid URI.
      */
     public static function fromParts(array $parts): UriInterface
     {
@@ -626,7 +628,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \TypeError If the scheme is invalid.
+     * @throws TypeError If the scheme is invalid.
      */
     private function filterScheme(string $scheme): string
     {
@@ -638,12 +640,12 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \TypeError If the host is invalid.
+     * @throws TypeError If the host is invalid.
      */
     private function filterHost(string $host): string
     {
         if ($host && $host !== self::HTTP_DEFAULT_HOST && strpos($host, '.') === false) {
-            throw new \InvalidArgumentException("Host '{$host}' is illegal!");
+            throw new InvalidArgumentException("Host '{$host}' is illegal!");
         }
 
         return strtolower($host);
@@ -654,7 +656,7 @@ class Uri implements UriInterface
      *
      * @return int|null
      *
-     * @throws \TypeError If the port is invalid.
+     * @throws TypeError If the port is invalid.
      */
     private function filterPort(?int $port): ?int
     {
@@ -664,7 +666,7 @@ class Uri implements UriInterface
 
         $port = (int)$port;
         if (1 > $port || 0xffff < $port) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 sprintf('Invalid port: %d. Must be between 1 and 65535', $port)
             );
         }
@@ -686,7 +688,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \TypeError If the path is invalid.
+     * @throws TypeError If the path is invalid.
      */
     private function filterPath(string $path): string
     {
@@ -704,7 +706,7 @@ class Uri implements UriInterface
      *
      * @return string
      *
-     * @throws \TypeError If the query or fragment is invalid.
+     * @throws TypeError If the query or fragment is invalid.
      */
     private function filterQueryAndFragment(string $str): string
     {
@@ -728,10 +730,10 @@ class Uri implements UriInterface
 
         if ($this->getAuthority() === '') {
             if (0 === strpos($this->path, '//')) {
-                throw new \InvalidArgumentException('The path of a URI without an authority must not start with two slashes "//"');
+                throw new InvalidArgumentException('The path of a URI without an authority must not start with two slashes "//"');
             }
             if ($this->scheme === '' && false !== strpos(explode('/', $this->path, 2)[0], ':')) {
-                throw new \InvalidArgumentException('A relative URI must not have a path beginning with a segment containing a colon');
+                throw new InvalidArgumentException('A relative URI must not have a path beginning with a segment containing a colon');
             }
         } elseif (isset($this->path[0]) && $this->path[0] !== '/') {
             @trigger_error(

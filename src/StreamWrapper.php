@@ -1,6 +1,7 @@
 <?php
 namespace Swlib\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\StreamInterface;
 
 /**
@@ -23,7 +24,7 @@ class StreamWrapper
      * @param StreamInterface $stream The stream to get a resource for
      *
      * @return resource
-     * @throws \InvalidArgumentException if stream is not readable or writable
+     * @throws InvalidArgumentException if stream is not readable or writable
      */
     public static function getResource(StreamInterface $stream)
     {
@@ -34,7 +35,7 @@ class StreamWrapper
         } elseif ($stream->isWritable()) {
             $mode = 'w';
         } else {
-            throw new \InvalidArgumentException('The stream must be readable, '
+            throw new InvalidArgumentException('The stream must be readable, '
                 . 'writable, or both.');
         }
 

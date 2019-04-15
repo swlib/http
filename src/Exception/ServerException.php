@@ -7,6 +7,7 @@
 
 namespace Swlib\Http\Exception;
 
+use Exception;
 use Swlib\Http\Request;
 use Swlib\Http\Response;
 use Swlib\Http\Status;
@@ -21,7 +22,7 @@ class ServerException extends BadResponseException
         ?Response $response,
         int $code = 0,
         string $message = 'Server error occurred, please contact with the website service provider!',
-        \Exception $previous = null
+        Exception $previous = null
     )
     {
         parent::__construct($request, $response, $code, $message, $previous);

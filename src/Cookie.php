@@ -8,6 +8,8 @@
 
 namespace Swlib\Http;
 
+use InvalidArgumentException;
+
 class Cookie
 {
 
@@ -46,12 +48,12 @@ class Cookie
 
         //Check if the cookie is valid according to RFC 6265
         if (empty($options['name']) && !is_numeric($options['name'])) {
-            throw new \InvalidArgumentException('Cookie must have its name!');
+            throw new InvalidArgumentException('Cookie must have its name!');
         }
 
         // Check if any of the invalid characters are present in the cookie name
         if (preg_match('/[\x00-\x20\x22\x28-\x29\x2c\x2f\x3a-\x40\x5c\x7b\x7d\x7f]/', $options['name'])) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Cookie name must not contain invalid characters: ASCII '
                 . 'Control characters (0-31;127), space, tab and the '
                 . 'following characters: ()<>@,;:\"/?={}'

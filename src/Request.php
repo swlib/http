@@ -8,6 +8,7 @@
 
 namespace Swlib\Http;
 
+use InvalidArgumentException;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UploadedFileInterface;
 use Psr\Http\Message\UriInterface;
@@ -59,7 +60,7 @@ class Request extends Message implements RequestInterface
     public function withRequestTarget($requestTarget): self
     {
         if (preg_match('/\s/', $requestTarget)) {
-            throw new \InvalidArgumentException(
+            throw new InvalidArgumentException(
                 'Invalid request target provided; cannot contain whitespace'
             );
         }

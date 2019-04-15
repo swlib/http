@@ -7,6 +7,10 @@
 
 namespace Swlib\Http;
 
+use BadMethodCallException;
+use RuntimeException;
+use Swoole\Buffer;
+
 class SwooleBuffer implements StreamInterface
 {
     public $buffer;
@@ -16,7 +20,7 @@ class SwooleBuffer implements StreamInterface
     public function __construct(string $data = '', ?int $length = null)
     {
         $length = $length ?? max(strlen($data), 32);
-        $this->buffer = new \Swoole\Buffer($length);
+        $this->buffer = new Buffer($length);
         $this->write($data);
     }
 
@@ -111,7 +115,7 @@ class SwooleBuffer implements StreamInterface
      * Returns the current position of the file read/write pointer
      *
      * @return int Position of the file pointer
-     * @throws \RuntimeException on error.
+     * @throws RuntimeException on error.
      */
     public function tell(): int
     {
@@ -148,7 +152,7 @@ class SwooleBuffer implements StreamInterface
      *     PHP $whence values for `fseek()`.  SEEK_SET: Set position equal to
      *     offset bytes SEEK_CUR: Set position to current location plus offset
      *     SEEK_END: Set position to end-of-stream plus offset.
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
     public function seek($offset, $whence = SEEK_SET): void
     {
@@ -165,7 +169,7 @@ class SwooleBuffer implements StreamInterface
                 $pos = $offset;
         }
         if ($pos < 0 || $pos >= $size) {
-            throw new \RuntimeException("Wrong Offset number $offset !");
+            throw new RuntimeException("Wrong Offset number $offset !");
         }
     }
 
@@ -177,7 +181,7 @@ class SwooleBuffer implements StreamInterface
      *
      * @see seek()
      * @link http://www.php.net/manual/en/function.fseek.php
-     * @throws \RuntimeException on failure.
+     * @throws RuntimeException on failure.
      */
     public function rewind(): void
     {
@@ -212,7 +216,7 @@ class SwooleBuffer implements StreamInterface
      *     call returns fewer bytes.
      * @return string Returns the data read from the stream, or an empty string
      *     if no bytes are available.
-     * @throws \RuntimeException if an error occurs.
+     * @throws RuntimeException if an error occurs.
      */
     public function read($length): string
     {
@@ -226,12 +230,12 @@ class SwooleBuffer implements StreamInterface
      * Returns the remaining contents in a string
      *
      * @return string
-     * @throws \RuntimeException if unable to read or an error occurs while
+     * @throws RuntimeException if unable to read or an error occurs while
      *     reading.
      */
     public function getContents()
     {
-        throw new \BadMethodCallException('Not implement!');
+        throw new BadMethodCallException('Not implement!');
     }
 
     /**

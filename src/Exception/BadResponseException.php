@@ -7,6 +7,7 @@
 
 namespace Swlib\Http\Exception;
 
+use Exception;
 use Swlib\Http\Request;
 use Swlib\Http\Response;
 
@@ -17,7 +18,7 @@ class BadResponseException extends RequestException
         ?Response $response,
         int $code = 0,
         string $message = 'Unknown Bad Response Error occurred!',
-        \Exception $previous = null
+        Exception $previous = null
     ) {
         parent::__construct($request, $response, $code, $message, $previous);
     }

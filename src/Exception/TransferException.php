@@ -7,6 +7,8 @@
 
 namespace Swlib\Http\Exception;
 
-class TransferException extends \RuntimeException
+use RuntimeException;
+
+class TransferException extends RuntimeException
 {
 }

@@ -7,14 +7,17 @@
 
 namespace Swlib\Http\Exception;
 
+use Exception;
+use Swlib\Http\Request;
+
 class ConnectException extends RequestException
 {
 
     public function __construct(
-        \Swlib\Http\Request $request,
+        Request $request,
         int $code = 0,
         string $message = '',
-        \Exception $previous = null
+        Exception $previous = null
     ) {
         parent::__construct($request, null, $code, $message, $previous);
     }
