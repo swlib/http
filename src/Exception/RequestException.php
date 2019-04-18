@@ -18,6 +18,10 @@ class RequestException extends TransferException
     private $request;
     /** @var Response */
     private $response;
+    /** @var int */
+    private $error_code;
+    /** @var string */
+    private $error_msg;
 
     public function __construct(
         Request $request,
@@ -31,6 +35,17 @@ class RequestException extends TransferException
         parent::__construct("HTTP {$code} {$phrase}: {$message}", $code, $previous);
         $this->request = $request;
         $this->response = $response;
+        // TODO set error code
+    }
+
+    public function getErrorCode(): int
+    {
+        return $this->error_code;
+    }
+
+    public function getErrorMsg(): string
+    {
+        return $this->error_msg;
     }
 
     /**
