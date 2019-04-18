@@ -7,8 +7,4 @@
 
 namespace Swlib\Http;
 
-if (version_compare(SWOOLE_VERSION, '4.2.3', '>')) {
-    class_alias(SwooleBuffer::class, 'Swlib\\Http\\BufferStream');
-} else {
-    class_alias(PHPMemory::class, 'Swlib\\Http\\BufferStream');
-}
+class_alias(PHPMemory::class, 'Swlib\\Http\\BufferStream');
