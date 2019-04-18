@@ -9,6 +9,7 @@
 namespace Swlib\Http;
 
 use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\UriInterface;
 
 /**
  * Class Message
@@ -21,6 +22,8 @@ class Message implements MessageInterface
 
     /**@var string */
     protected $protocolVersion = '1.1';
+    /**@var Uri */
+    protected $uri;
     /**@var [][]string */
     protected $headerNames = [];
     protected $headers = [];
@@ -50,6 +53,23 @@ class Message implements MessageInterface
             return $this;
         }
         $this->protocolVersion = $version;
+
+        return $this;
+    }
+
+    public function getUri(): ?UriInterface
+    {
+        return $this->uri;
+    }
+
+    /**
+     * @param UriInterface|null $uri
+     * @param bool $preserveHost
+     * @return $this
+     */
+    public function withUri(?UriInterface $uri, $preserveHost = false)
+    {
+        $this->uri = $uri;
 
         return $this;
     }

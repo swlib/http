@@ -16,8 +16,6 @@ use Psr\Http\Message\UriInterface;
 class Request extends Message implements RequestInterface
 {
 
-    /**@var Uri */
-    protected $uri;
     protected $method;
     protected $requestTarget;
 
@@ -85,14 +83,9 @@ class Request extends Message implements RequestInterface
         return $this;
     }
 
-    public function getUri(): ?UriInterface
-    {
-        return $this->uri;
-    }
-
     /**
-     * @param Uri $uri
-     * @param bool $autoHost
+     * @param UriInterface|null $uri
+     * @param bool $preserveHost
      * @return $this
      */
     public function withUri(?UriInterface $uri, $preserveHost = false): self
