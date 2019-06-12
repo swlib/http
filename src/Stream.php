@@ -1,4 +1,5 @@
 <?php
+
 namespace Swlib\Http;
 
 use Exception;
@@ -13,6 +14,17 @@ use RuntimeException;
  */
 class Stream implements StreamInterface
 {
+    /**
+     * Resource modes.
+     *
+     * @var string
+     *
+     * @see http://php.net/manual/function.fopen.php
+     * @see http://php.net/manual/en/function.gzopen.php
+     */
+    const READABLE_MODES = '/r|a\+|ab\+|w\+|wb\+|x\+|xb\+|c\+|cb\+/';
+    const WRITABLE_MODES = '/a|w|r\+|rb\+|rw|x|c/';
+
     private $stream;
     private $size;
     private $seekable;
@@ -20,22 +32,6 @@ class Stream implements StreamInterface
     private $writable;
     private $uri;
     private $customMetadata;
-
-    /** @var array Hash of readable and writable stream types */
-    private static $readWriteHash = [
-        'read' => [
-            'r' => true, 'w+' => true, 'r+' => true, 'x+' => true, 'c+' => true,
-            'rb' => true, 'w+b' => true, 'r+b' => true, 'x+b' => true,
-            'c+b' => true, 'rt' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a+' => true
-        ],
-        'write' => [
-            'w' => true, 'w+' => true, 'rw' => true, 'r+' => true, 'x+' => true,
-            'c+' => true, 'wb' => true, 'w+b' => true, 'r+b' => true,
-            'x+b' => true, 'c+b' => true, 'w+t' => true, 'r+t' => true,
-            'x+t' => true, 'c+t' => true, 'a' => true, 'a+' => true
-        ]
-    ];
 
     /**
      * This constructor accepts an associative array of options.
@@ -46,8 +42,8 @@ class Stream implements StreamInterface
      * - metadata: (array) Any additional metadata to return when the metadata
      *   of the stream is accessed.
      *
-     * @param resource $stream  Stream resource to wrap.
-     * @param array    $options Associative array of options.
+     * @param resource $stream Stream resource to wrap.
+     * @param array $options Associative array of options.
      *
      * @throws InvalidArgumentException if the stream is not a stream resource
      */
@@ -68,8 +64,8 @@ class Stream implements StreamInterface
         $this->stream = $stream;
         $meta = stream_get_meta_data($this->stream);
         $this->seekable = $meta['seekable'];
-        $this->readable = isset(self::$readWriteHash['read'][$meta['mode']]);
-        $this->writable = isset(self::$readWriteHash['write'][$meta['mode']]);
+        $this->readable = (bool)preg_match(self::READABLE_MODES, $meta['mode']);
+        $this->writable = (bool)preg_match(self::WRITABLE_MODES, $meta['mode']);
         $this->uri = $this->getMetadata('uri');
     }
 
@@ -85,7 +81,7 @@ class Stream implements StreamInterface
     {
         try {
             $this->seek(0);
-            return (string) stream_get_contents($this->stream);
+            return (string)stream_get_contents($this->stream);
         } catch (Exception $e) {
             return '';
         }
@@ -200,6 +196,8 @@ class Stream implements StreamInterface
 
     public function seek($offset, $whence = SEEK_SET)
     {
+        $whence = (int)$whence;
+
         if (!isset($this->stream)) {
             throw new RuntimeException('Stream is detached');
         }
@@ -207,8 +205,10 @@ class Stream implements StreamInterface
             throw new RuntimeException('Stream is not seekable');
         }
         if (fseek($this->stream, $offset, $whence) === -1) {
-            throw new RuntimeException('Unable to seek to stream position '
-                . $offset . ' with whence ' . var_export($whence, true));
+            throw new RuntimeException(
+                'Unable to seek to stream position '
+                . $offset . ' with whence ' . var_export($whence, true)
+            );
         }
     }
 
