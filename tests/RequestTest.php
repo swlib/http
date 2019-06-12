@@ -54,20 +54,6 @@ class RequestTest extends TestCase
         $this->assertSame('0', (string)$r->getBody());
     }
 
-    public function testConstructorDoesNotReadStreamBody()
-    {
-        $streamIsRead = false;
-        $body = Http\FnStream::decorate(Http\stream_for(''), [
-            '__toString' => function () use (&$streamIsRead) {
-                $streamIsRead = true;
-                return '';
-            }
-        ]);
-        $r = new Request('GET', '/', [], $body);
-        $this->assertFalse($streamIsRead);
-        $this->assertSame($body, $r->getBody());
-    }
-
     public function testCapitalizesMethod()
     {
         $r = new Request('get', '/');

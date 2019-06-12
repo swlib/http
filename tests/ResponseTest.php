@@ -34,21 +34,6 @@ class ResponseTest extends TestCase
         $this->assertSame('Not Found', $r->getReasonPhrase());
     }
 
-    public function testConstructorDoesNotReadStreamBody()
-    {
-        $streamIsRead = false;
-        $body = Http\FnStream::decorate(Http\stream_for(''), [
-            '__toString' => function () use (&$streamIsRead) {
-                $streamIsRead = true;
-                return '';
-            }
-        ]);
-
-        $r = new Response(200, [], $body);
-        $this->assertFalse($streamIsRead);
-        $this->assertSame($body, $r->getBody());
-    }
-
     public function testStatusCanBeNumericString()
     {
         $r = new Response('404');
