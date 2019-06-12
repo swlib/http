@@ -14,11 +14,16 @@ use RuntimeException;
 
 Class PHPMemory implements StreamInterface
 {
-    private $stream;
-    private $seekable;
-    private $readable;
-    private $writable;
-    private $readList = [
+    /** @var resource|null */
+    protected $stream;
+    /** @var bool */
+    protected $seekable;
+    /** @var bool */
+    protected $readable;
+    /** @var bool */
+    protected $writable;
+
+    protected $readList = [
         'r' => true,
         'w+' => true,
         'r+' => true,
@@ -36,7 +41,7 @@ Class PHPMemory implements StreamInterface
         'c+t' => true,
         'a+' => true
     ];
-    private $writeList = [
+    protected $writeList = [
         'w' => true,
         'w+' => true,
         'rw' => true,
@@ -97,7 +102,7 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 返回Stream对象中完整的流数据
+     * Reads all data from the stream into a string, from the beginning to end.
      *
      * @return string
      */
@@ -112,7 +117,7 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 关闭当前流对象，流对象中的数据也随之清空
+     * Closes the stream and any underlying resources.
      */
     public function close(): void
     {
@@ -122,6 +127,11 @@ Class PHPMemory implements StreamInterface
         }
     }
 
+    /**
+     * Separates any underlying resources from the stream.
+     *
+     * @return resource|null
+     */
     public function detach()
     {
         if (!isset($this->stream)) {
@@ -135,7 +145,7 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 获取当前Stream对象中数据的大小（长度）
+     * Get the size of the stream if known.
      *
      * @return int|null
      */
@@ -153,7 +163,7 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 获取当前数据流指针所处位置
+     * Returns the current position of the file read/write pointer
      *
      * @return bool|int
      */
@@ -168,7 +178,7 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 判断当数据流指针是否处于资源结束位置
+     * Returns true if the stream is at the end of the stream.
      *
      * @return bool
      */
@@ -177,13 +187,18 @@ Class PHPMemory implements StreamInterface
         return !$this->stream || feof($this->stream);
     }
 
+    /**
+     * Returns whether or not the stream is seekable.
+     *
+     * @return bool
+     */
     public function isSeekable(): bool
     {
         return $this->seekable;
     }
 
     /**
-     * 移动数据流指针到指定位置
+     * Seek to a position in the stream.
      *
      * @param     $offset
      * @param int $whence
@@ -201,21 +216,26 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
-     * 将数据流指针移动至开始位置
+     * Seek to the beginning of the stream.
      */
     public function rewind(): void
     {
         $this->seek(0);
     }
 
+    /**
+     * Returns whether or not the stream is writable.
+     *
+     * @return bool
+     */
     public function isWritable(): bool
     {
         return $this->writable;
     }
 
     /**
-     * 向当前数据流写入数据
-     * 注意：写入时应该注意数据流指针所处位置
+     * Write data to the stream.
+     * Note: you should pay attention to the location of the data stream pointer when writing.
      *
      * @param string $string
      *
@@ -235,6 +255,8 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
+     * Returns whether or not the stream is readable.
+     *
      * @return bool
      */
     public function isReadable(): bool
@@ -243,6 +265,8 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
+     * Read data from the stream.
+     *
      * @param int $length
      * @return string
      */
@@ -266,6 +290,8 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
+     * Returns the remaining contents in a string.
+     *
      * @return bool|string
      */
     public function getContents()
@@ -279,6 +305,8 @@ Class PHPMemory implements StreamInterface
     }
 
     /**
+     * Get stream metadata as an associative array or retrieve a specific key.
+     *
      * @param null $key
      * @return array|mixed|null
      */
