@@ -9,11 +9,11 @@ namespace Swlib\Http;
 
 use Exception;
 use InvalidArgumentException;
+use Psr\Http\Message\StreamInterface;
 use RuntimeException;
 
 Class PHPMemory implements StreamInterface
 {
-
     private $stream;
     private $seekable;
     private $readable;
@@ -114,7 +114,7 @@ Class PHPMemory implements StreamInterface
     /**
      * 关闭当前流对象，流对象中的数据也随之清空
      */
-    public function close()
+    public function close(): void
     {
         $res = $this->detach();
         if (is_resource($res)) {
@@ -129,7 +129,7 @@ Class PHPMemory implements StreamInterface
         }
         $this->readable = $this->writable = $this->seekable = false;
         $result = $this->stream;
-        unset($this->stream);
+        $this->stream = null;
 
         return $result;
     }
@@ -141,6 +141,9 @@ Class PHPMemory implements StreamInterface
      */
     public function getSize()
     {
+        if (!$this->stream) {
+            return null;
+        }
         $stats = fstat($this->stream);
         if (isset($stats['size'])) {
             return $stats['size'];
@@ -169,12 +172,12 @@ Class PHPMemory implements StreamInterface
      *
      * @return bool
      */
-    public function eof()
+    public function eof(): bool
     {
         return !$this->stream || feof($this->stream);
     }
 
-    public function isSeekable()
+    public function isSeekable(): bool
     {
         return $this->seekable;
     }
@@ -185,7 +188,7 @@ Class PHPMemory implements StreamInterface
      * @param     $offset
      * @param int $whence
      */
-    public function seek($offset, $whence = SEEK_SET)
+    public function seek($offset, $whence = SEEK_SET): void
     {
         if (!$this->seekable) {
             throw new RuntimeException('Stream is not seekable');
@@ -200,12 +203,12 @@ Class PHPMemory implements StreamInterface
     /**
      * 将数据流指针移动至开始位置
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->seek(0);
     }
 
-    public function isWritable()
+    public function isWritable(): bool
     {
         return $this->writable;
     }
@@ -231,12 +234,19 @@ Class PHPMemory implements StreamInterface
         return $result;
     }
 
-    public function isReadable()
+    /**
+     * @return bool
+     */
+    public function isReadable(): bool
     {
         return $this->readable;
     }
 
-    public function read($length)
+    /**
+     * @param int $length
+     * @return string
+     */
+    public function read($length): string
     {
         if (!$this->readable) {
             throw new RuntimeException('Cannot read from non-readable stream');
@@ -255,6 +265,9 @@ Class PHPMemory implements StreamInterface
         return $string;
     }
 
+    /**
+     * @return bool|string
+     */
     public function getContents()
     {
         $contents = stream_get_contents($this->stream);
@@ -265,6 +278,10 @@ Class PHPMemory implements StreamInterface
         return $contents;
     }
 
+    /**
+     * @param null $key
+     * @return array|mixed|null
+     */
     public function getMetadata($key = null)
     {
         if (!isset($this->stream)) {
@@ -278,35 +295,26 @@ Class PHPMemory implements StreamInterface
         }
     }
 
-    public function __destruct()
-    {
-        $this->close();
-    }
-
+    /**
+     * @return resource|null
+     */
     public function getStreamResource()
     {
         return $this->stream;
     }
 
-    public function truncate($size = 0)
+    /**
+     * @param int $size
+     * @return bool
+     */
+    public function truncate(int $size = 0): bool
     {
         return ftruncate($this->stream, $size);
     }
 
-    public function clear()
+    public function __destruct()
     {
-        return $this->truncate(0);
-    }
-
-    public function overWrite(string $data = null)
-    {
-        if ($data === '' || $data === null) {
-            $this->clear();
-        } else {
-            $this->rewind();
-            $this->write($data);
-            $this->truncate(strlen($data));
-        }
+        $this->close();
     }
 
 }

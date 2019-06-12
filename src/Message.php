@@ -263,11 +263,7 @@ class Message implements MessageInterface
             return $this;
         }
         if ($body === null) {
-            if (method_exists($this->body, 'clear')) {
-                $this->body->clear();
-            } else {
-                $this->body = stream_for('');
-            }
+            $this->body = stream_for('');
         } else {
             $this->body = $body;
         }

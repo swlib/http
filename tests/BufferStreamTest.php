@@ -36,19 +36,12 @@ class BufferStreamTest extends TestCase
         $b = new BufferStream();
         $b->write('foo');
         $b->write('baz');
+        $b->rewind();
         $this->assertEquals('foo', $b->read(3));
         $b->write('bar');
-        $this->assertEquals('foobazbar', (string)$b);
-        $this->assertEquals(3, $b->tell());
-    }
-
-    public function testDetachCloseBuffer()
-    {
-        $b = new BufferStream();
-        $b->write('foo');
-        $b->detach();
-        $this->assertEquals(3, $b->write('abc')->getSize());
-        $this->assertEquals('foo', $b->read(10));
+        $this->assertEquals('foobar', (string)$b);
+        $this->assertEquals(6, $b->tell());
+        $this->assertTrue($b->eof());
     }
 
 }
