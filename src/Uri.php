@@ -644,10 +644,6 @@ class Uri implements UriInterface
      */
     private function filterHost(string $host): string
     {
-        if ($host && $host !== self::HTTP_DEFAULT_HOST && strpos($host, '.') === false) {
-            throw new InvalidArgumentException("Host '{$host}' is illegal!");
-        }
-
         return strtolower($host);
     }
 
