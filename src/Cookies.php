@@ -18,7 +18,7 @@ class Cookies
      *
      * @var \Swlib\Http\Cookie[]
      */
-    public $raw = [];
+    protected $raw = [];
 
     /**
      * Cookies constructor.
