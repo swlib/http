@@ -24,8 +24,9 @@ class BufferStreamTest extends TestCase
     public function testRemovesReadDataFromBuffer()
     {
         $b = new BufferStream();
-        $this->assertEquals(3, $b->write('foo')->getSize());
+        $this->assertEquals(3, $b->write('foo'));
         $this->assertFalse($b->eof());
+        $b->rewind();
         $this->assertEquals('foo', $b->read(10));
         $this->assertTrue($b->eof());
         $this->assertEquals('', $b->read(10));
