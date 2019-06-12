@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: twosee
- * Date: 2017/10/30
- * Time: 下午2:27
- */
 
 namespace Swlib\Http;
 
