@@ -7,7 +7,6 @@ use Iterator;
 use Psr\Http\Message\MessageInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 use RuntimeException;
@@ -46,7 +45,7 @@ function str(MessageInterface $message)
 /**
  * Returns a UriInterface for the given value.
  *
- * This function accepts a string or {@see Psr\Http\Message\UriInterface} and
+ * This function accepts a string or {@see \Psr\Http\Message\UriInterface} and
  * returns a UriInterface for the given value. If the value is already a
  * `UriInterface`, it is returned as-is.
  *
@@ -73,7 +72,7 @@ function uri_for($uri)
  * - metadata: Array of custom metadata.
  * - size: Size of the stream.
  *
- * @param resource|string|null|int|float|bool|StreamInterface|callable $resource Entity body data
+ * @param resource|string|null|int|float|bool|StreamInterface|callable|Iterator $resource Entity body data
  * @param array $options Additional options
  *
  * @return StreamInterface
@@ -81,10 +80,6 @@ function uri_for($uri)
  */
 function stream_for($resource = '', array $options = [])
 {
-    if (is_string($resource)) {
-        return new BufferStream($resource); //TODO: options
-    }
-
     if (is_scalar($resource)) {
         $stream = fopen('php://temp', 'r+');
         if ($resource !== '') {
@@ -187,86 +182,6 @@ function normalize_header($header)
     }
 
     return $result;
-}
-
-/**
- * Clone and modify a request with the given changes.
- *
- * The changes can be one of:
- * - method: (string) Changes the HTTP method.
- * - set_headers: (array) Sets the given headers.
- * - remove_headers: (array) Remove the given headers.
- * - body: (mixed) Sets the given body.
- * - uri: (UriInterface) Set the URI.
- * - query: (string) Set the query string value of the URI.
- * - version: (string) Set the protocol version.
- *
- * @param RequestInterface $request Request to clone and modify.
- * @param array $changes Changes to apply.
- *
- * @return RequestInterface
- */
-function modify_request(RequestInterface $request, array $changes)
-{
-    if (!$changes) {
-        return $request;
-    }
-
-    $headers = $request->getHeaders();
-
-    if (!isset($changes['uri'])) {
-        $uri = $request->getUri();
-    } else {
-        // Remove the host header if one is on the URI
-        if ($host = $changes['uri']->getHost()) {
-            $changes['set_headers']['Host'] = $host;
-
-            if ($port = $changes['uri']->getPort()) {
-                $standardPorts = ['http' => 80, 'https' => 443];
-                $scheme = $changes['uri']->getScheme();
-                if (isset($standardPorts[$scheme]) && $port != $standardPorts[$scheme]) {
-                    $changes['set_headers']['Host'] .= ':' . $port;
-                }
-            }
-        }
-        $uri = $changes['uri'];
-    }
-
-    if (!empty($changes['remove_headers'])) {
-        $headers = _caseless_remove($changes['remove_headers'], $headers);
-    }
-
-    if (!empty($changes['set_headers'])) {
-        $headers = _caseless_remove(array_keys($changes['set_headers']), $headers);
-        $headers = $changes['set_headers'] + $headers;
-    }
-
-    if (isset($changes['query'])) {
-        $uri = $uri->withQuery($changes['query']);
-    }
-
-    if ($request instanceof ServerRequestInterface) {
-        return new PHPServerRequest(
-            isset($changes['method']) ? $changes['method'] : $request->getMethod(),
-            $uri,
-            $headers,
-            isset($changes['body']) ? $changes['body'] : $request->getBody(),
-            isset($changes['version'])
-                ? $changes['version']
-                : $request->getProtocolVersion(),
-            $request->getServerParams()
-        );
-    }
-
-    return new PHPRequest(
-        isset($changes['method']) ? $changes['method'] : $request->getMethod(),
-        $uri,
-        $headers,
-        isset($changes['body']) ? $changes['body'] : $request->getBody(),
-        isset($changes['version'])
-            ? $changes['version']
-            : $request->getProtocolVersion()
-    );
 }
 
 /**
@@ -466,7 +381,7 @@ function readline(StreamInterface $stream, $maxLength = null)
  *
  * @param string $message Request message string.
  *
- * @return PHPRequest
+ * @return Request
  */
 function parse_request($message)
 {
@@ -478,7 +393,7 @@ function parse_request($message)
     $parts = explode(' ', $data['start-line'], 3);
     $version = isset($parts[2]) ? explode('/', $parts[2])[1] : '1.1';
 
-    $request = new PHPRequest(
+    $request = new Request(
         $parts[0],
         $matches[1] === '/' ? _parse_request_uri($parts[1], $data['headers']) : $parts[1],
         $data['headers'],
@@ -494,7 +409,7 @@ function parse_request($message)
  *
  * @param string $message Response message string.
  *
- * @return PHPResponse
+ * @return Response
  */
 function parse_response($message)
 {
@@ -507,7 +422,7 @@ function parse_response($message)
     }
     $parts = explode(' ', $data['start-line'], 3);
 
-    return new PHPResponse(
+    return new Response(
         $parts[1],
         $data['headers'],
         $data['body'],
@@ -525,7 +440,7 @@ function parse_response($message)
  * be parsed into ['foo[a]' => '1', 'foo[b]' => '2']).
  *
  * @param string $str Query string to parse
- * @param bool|string $urlEncoding How the query string is encoded
+ * @param int|bool $urlEncoding How the query string is encoded
  *
  * @return array
  */
@@ -541,9 +456,9 @@ function parse_query($str, $urlEncoding = true)
         $decoder = function ($value) {
             return rawurldecode(str_replace('+', ' ', $value));
         };
-    } elseif ($urlEncoding == PHP_QUERY_RFC3986) {
+    } elseif ($urlEncoding === PHP_QUERY_RFC3986) {
         $decoder = 'rawurldecode';
-    } elseif ($urlEncoding == PHP_QUERY_RFC1738) {
+    } elseif ($urlEncoding === PHP_QUERY_RFC1738) {
         $decoder = 'urldecode';
     } else {
         $decoder = function ($str) { return $str; };
@@ -641,6 +556,7 @@ function mimetype_from_filename($filename)
 function mimetype_from_extension($extension)
 {
     static $mimetypes = [
+        '3gp' => 'video/3gpp',
         '7z' => 'application/x-7z-compressed',
         'aac' => 'audio/x-aac',
         'ai' => 'application/postscript',
@@ -688,6 +604,7 @@ function mimetype_from_extension($extension)
         'mid' => 'audio/midi',
         'midi' => 'audio/midi',
         'mov' => 'video/quicktime',
+        'mkv' => 'video/x-matroska',
         'mp3' => 'audio/mpeg',
         'mp4' => 'video/mp4',
         'mp4a' => 'audio/mp4',
@@ -726,6 +643,7 @@ function mimetype_from_extension($extension)
         'txt' => 'text/plain',
         'wav' => 'audio/x-wav',
         'webm' => 'video/webm',
+        'webp' => 'image/webp',
         'wma' => 'audio/x-ms-wma',
         'wmv' => 'video/x-ms-wmv',
         'woff' => 'application/x-font-woff',
@@ -839,6 +757,46 @@ function _parse_request_uri($path, array $headers)
     $scheme = substr($host, -4) === ':443' ? 'https' : 'http';
 
     return $scheme . '://' . $host . '/' . ltrim($path, '/');
+}
+
+/**
+ * Get a short summary of the message body
+ *
+ * Will return `null` if the response is not printable.
+ *
+ * @param MessageInterface $message The message to get the body summary
+ * @param int $truncateAt The maximum allowed size of the summary
+ *
+ * @return null|string
+ */
+function get_message_body_summary(MessageInterface $message, $truncateAt = 120)
+{
+    $body = $message->getBody();
+
+    if (!$body->isSeekable() || !$body->isReadable()) {
+        return null;
+    }
+
+    $size = $body->getSize();
+
+    if ($size === 0) {
+        return null;
+    }
+
+    $summary = $body->read($truncateAt);
+    $body->rewind();
+
+    if ($size > $truncateAt) {
+        $summary .= ' (truncated...)';
+    }
+
+    // Matches any printable character, including unicode characters:
+    // letters, marks, numbers, punctuation, spacing, and separators.
+    if (preg_match('/[^\pL\pM\pN\pP\pS\pZ\n\r\t]/', $summary)) {
+        return null;
+    }
+
+    return $summary;
 }
 
 /** @internal */

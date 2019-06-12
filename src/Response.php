@@ -20,7 +20,7 @@ class Response extends Message implements ResponseInterface
         $status = Status::OK,
         array $headers = [],
         $body = null,
-        string $version = '1.1',
+        string $protocolVersion = '1.1',
         string $reason = null
     ) {
         $this->statusCode = (int)$status;
@@ -30,7 +30,7 @@ class Response extends Message implements ResponseInterface
         } else {
             $this->reasonPhrase = (string)$reason;
         }
-        $this->protocolVersion = $version;
+        $this->protocolVersion = $protocolVersion;
     }
 
     /**

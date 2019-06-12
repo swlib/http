@@ -24,9 +24,9 @@ class Request extends Message implements RequestInterface
     protected $parsedBody;
     protected $uploadedFiles = [];
 
-    function __construct(string $method = 'GET', $uri = '', array $headers = [], $body = null)
+    function __construct(string $method = 'GET', $uri = '', array $headers = [], $body = null, string $protocolVersion = '1.1')
     {
-        parent::__construct($headers, $body);
+        parent::__construct($headers, $body, $protocolVersion);
         if (!($uri instanceof UriInterface)) {
             $uri = new Uri($uri); // request must has uri
         }

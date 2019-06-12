@@ -21,7 +21,7 @@ class Message implements MessageInterface
 {
 
     /**@var string */
-    protected $protocolVersion = '1.1';
+    protected $protocolVersion;
     /**@var Uri */
     protected $uri;
     /**@var [][]string */
@@ -30,8 +30,9 @@ class Message implements MessageInterface
     /**@var StreamInterface */
     protected $body;
 
-    function __construct(array $headers = [], $body = null)
+    function __construct(array $headers = [], $body = null, string $protocolVersion = '1.1')
     {
+        $this->withProtocolVersion($protocolVersion);
         $this->withAddedHeaders($headers);
         if ($body !== '' && $body !== null) {
             $this->body = stream_for($body);
