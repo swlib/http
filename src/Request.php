@@ -15,7 +15,6 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
 {
-
     protected $method;
     protected $requestTarget;
 
@@ -273,5 +272,4 @@ class Request extends Message implements RequestInterface
 
         return $req;
     }
-
 }

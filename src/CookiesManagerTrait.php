@@ -9,7 +9,6 @@ namespace Swlib\Http;
 
 trait CookiesManagerTrait
 {
-
     /**@var Cookies * */
     public $cookies;
 
@@ -74,5 +73,4 @@ trait CookiesManagerTrait
 
         return $this;
     }
-
 }

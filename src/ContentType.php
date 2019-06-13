@@ -389,5 +389,4 @@ class ContentType
     {
         return self::MAP[$suffix] ?? '';
     }
-
 }

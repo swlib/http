@@ -19,7 +19,6 @@ use Psr\Http\Message\UriInterface;
  */
 class Message implements MessageInterface
 {
-
     /**@var string */
     protected $protocolVersion;
     /**@var Uri */
@@ -292,5 +291,4 @@ class Message implements MessageInterface
             return trim($value, " \t");
         }, $values);
     }
-
 }

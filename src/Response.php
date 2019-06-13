@@ -12,7 +12,6 @@ use Psr\Http\Message\ResponseInterface;
 
 class Response extends Message implements ResponseInterface
 {
-
     protected $statusCode = Status::OK;
     protected $reasonPhrase = 'OK';
 

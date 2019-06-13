@@ -809,5 +809,4 @@ class Suffix
     {
         return self::MAP[$contentType][0] ?? '';
     }
-
 }
