@@ -10,7 +10,7 @@ namespace Swlib\Http;
 trait CookiesManager
 {
     /**@var Cookies * */
-    public $cookies;
+    protected $cookies;
 
     /**@var Cookies * */
     public $incremental_cookies;
@@ -23,9 +23,9 @@ trait CookiesManager
         }
     }
 
-    public function getCookies()
+    public function getCookies(): Cookies
     {
-        return $this->cookies->getRaw();
+        return $this->cookies;
     }
 
     /**
