@@ -9,6 +9,7 @@
 namespace Swlib\Http;
 
 use Psr\Http\Message\MessageInterface;
+use Psr\Http\Message\StreamInterface;
 use Psr\Http\Message\UriInterface;
 
 /**
@@ -163,7 +164,7 @@ class Message implements MessageInterface
         $normalized = strtolower($raw_name);
         if (isset($this->headerNames[$normalized])) {
             $this->withoutHeader($raw_name);
-            if ($value === null) {
+            if ($value === null || $value === false) {
                 return $this;
             }
         }
@@ -242,9 +243,9 @@ class Message implements MessageInterface
     }
 
     /**
-     * @return \Psr\Http\Message\StreamInterface|StreamInterface
+     * @return StreamInterface
      */
-    public function getBody(): \Psr\Http\Message\StreamInterface
+    public function getBody(): StreamInterface
     {
         if (!isset($this->body)) {
             $this->body = stream_for('');
@@ -254,10 +255,10 @@ class Message implements MessageInterface
     }
 
     /**
-     * @param null|\Psr\Http\Message\StreamInterface|StreamInterface $body
+     * @param StreamInterface $body
      * @return $this
      */
-    public function withBody(?\Psr\Http\Message\StreamInterface $body): self
+    public function withBody(?StreamInterface $body): self
     {
         if ($body === $this->body) {
             return $this;
