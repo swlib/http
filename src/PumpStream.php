@@ -48,7 +48,7 @@ class PumpStream implements StreamInterface
         $this->source = $source;
         $this->size = isset($options['size']) ? $options['size'] : null;
         $this->metadata = isset($options['metadata']) ? $options['metadata'] : [];
-        $this->buffer = new BufferStream();
+        $this->buffer = new BufferStream;
     }
 
     public function __toString()

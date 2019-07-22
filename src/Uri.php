@@ -380,7 +380,7 @@ class Uri implements UriInterface
      */
     public static function fromParts(array $parts): UriInterface
     {
-        $uri = new self();
+        $uri = new self;
         $uri->applyParts($parts);
         $uri->validateState();
 

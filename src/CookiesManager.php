@@ -15,11 +15,11 @@ trait CookiesManager
     /**@var Cookies * */
     protected $incremental_cookies;
 
-    private function __cookiesInitialization(bool $incremental = false)
+    protected function __constructCookiesManager(bool $incremental = false)
     {
-        $this->cookies = new Cookies();
+        $this->cookies = new Cookies;
         if ($incremental) {
-            $this->incremental_cookies = new Cookies();
+            $this->incremental_cookies = new Cookies;
         }
     }
 
@@ -77,5 +77,13 @@ trait CookiesManager
         ]);
 
         return $this;
+    }
+
+    protected function __cloneCookiesManager()
+    {
+        $this->cookies = clone $this->cookies;
+        if ($this->incremental_cookies) {
+            $this->incremental_cookies = new Cookies;
+        }
     }
 }
