@@ -39,14 +39,14 @@ class Request extends Message implements RequestInterface
         if ($this->requestTarget !== null) {
             return $this->requestTarget;
         }
-        
+
         parse_str($this->uri->getQuery(), $query);
         $query = $this->getQueryParams() + $query; //attribute value first
         $query = http_build_query($query);
-        
+
         $target = $this->uri->getPath() ?: '/';
         $target = empty($query) ? $target : $target . '?' . $query;
-        
+
         return $target;
     }
 
@@ -117,6 +117,10 @@ class Request extends Message implements RequestInterface
         // Ensure Host is the first header.
         // See: http://tools.ietf.org/html/rfc7230#section-5.4
         $this->headers = [$raw_name => [$host]] + $this->headers;
+
+        if (!$this->hasHeader('Authorization')) {
+            $this->initBasicAuth();
+        }
     }
 
     public function getCookieParams(): array
