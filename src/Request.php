@@ -15,8 +15,9 @@ use Psr\Http\Message\UriInterface;
 
 class Request extends Message implements RequestInterface
 {
-
-    protected $method;
+    /** @var string */
+    protected $method = 'GET';
+    /** @var null|string */
     protected $requestTarget;
 
     protected $cookieParams = [];
