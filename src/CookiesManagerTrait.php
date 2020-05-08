@@ -13,7 +13,7 @@ trait CookiesManagerTrait
     public $cookies;
 
     /**@var Cookies * */
-    protected $incremental_cookies;
+    public $incremental_cookies;
 
     protected function __constructCookiesManager(bool $incremental = false)
     {
@@ -26,11 +26,6 @@ trait CookiesManagerTrait
     public function getCookies()
     {
         return $this->cookies->getRaw();
-    }
-
-    public function getIncrementalCookies(): Cookies
-    {
-        return $this->incremental_cookies;
     }
 
     /**
