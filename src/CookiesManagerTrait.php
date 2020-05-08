@@ -7,7 +7,7 @@
 
 namespace Swlib\Http;
 
-trait CookiesManager
+trait CookiesManagerTrait
 {
     /**@var Cookies * */
     protected $cookies;
