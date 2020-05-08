@@ -12,7 +12,6 @@ use InvalidArgumentException;
 
 class Cookie
 {
-
     public $name = '';
     public $value = '';
     public $expires = 0;

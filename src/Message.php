@@ -20,7 +20,6 @@ use Psr\Http\Message\UriInterface;
  */
 class Message implements MessageInterface
 {
-
     /**@var string */
     protected $protocolVersion = '1.1';
     /**@var Uri */
@@ -165,7 +164,7 @@ class Message implements MessageInterface
         $normalized = strtolower($raw_name);
         if (isset($this->headerNames[$normalized])) {
             $this->withoutHeader($raw_name);
-            if ($value === null) {
+            if ($value === null || $value === false) {
                 return $this;
             }
         }
@@ -293,5 +292,4 @@ class Message implements MessageInterface
             return trim($value, " \t");
         }, $values);
     }
-
 }

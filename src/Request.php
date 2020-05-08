@@ -40,14 +40,14 @@ class Request extends Message implements RequestInterface
         if ($this->requestTarget !== null) {
             return $this->requestTarget;
         }
-        
+
         parse_str($this->uri->getQuery(), $query);
         $query = $this->getQueryParams() + $query; //attribute value first
         $query = http_build_query($query);
-        
+
         $target = $this->uri->getPath() ?: '/';
         $target = empty($query) ? $target : $target . '?' . $query;
-        
+
         return $target;
     }
 
@@ -273,5 +273,4 @@ class Request extends Message implements RequestInterface
 
         return $req;
     }
-
 }

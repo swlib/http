@@ -7,26 +7,30 @@
 
 namespace Swlib\Http;
 
-trait CookiesManagerTrait
+trait CookiesManager
 {
+    /**@var Cookies * */
+    protected $cookies;
 
     /**@var Cookies * */
-    public $cookies;
+    protected $incremental_cookies;
 
-    /**@var Cookies * */
-    public $incremental_cookies;
-
-    private function __cookiesInitialization(bool $incremental = false)
+    protected function __constructCookiesManager(bool $incremental = false)
     {
-        $this->cookies = new Cookies();
+        $this->cookies = new Cookies;
         if ($incremental) {
-            $this->incremental_cookies = new Cookies();
+            $this->incremental_cookies = new Cookies;
         }
     }
 
-    public function getCookies()
+    public function getCookies(): Cookies
     {
-        return $this->cookies->getRaw();
+        return $this->cookies;
+    }
+
+    public function getIncrementalCookies(): Cookies
+    {
+        return $this->incremental_cookies;
     }
 
     /**
@@ -75,4 +79,11 @@ trait CookiesManagerTrait
         return $this;
     }
 
+    protected function __cloneCookiesManager()
+    {
+        $this->cookies = clone $this->cookies;
+        if ($this->incremental_cookies) {
+            $this->incremental_cookies = new Cookies;
+        }
+    }
 }

@@ -101,5 +101,4 @@ class Util
             return self::parseHeader($raw_header[0]);
         }
     }
-
 }

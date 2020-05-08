@@ -127,5 +127,4 @@ class SwUploadFile implements UploadedFileInterface
     {
         throw new BadMethodCallException('Nop');
     }
-
 }

@@ -4,7 +4,6 @@ namespace Swlib\Http;
 
 class Status
 {
-
     // Informational 1xx
     const CONTINUE = 100;
     const SWITCHING_PROTOCOLS = 101;
@@ -118,5 +117,4 @@ class Status
     {
         return self::PHRASES[$statusCode] ?? 'Unknown';
     }
-
 }

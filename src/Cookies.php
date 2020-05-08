@@ -10,7 +10,6 @@ namespace Swlib\Http;
 
 class Cookies
 {
-
     const DELIMITER = '$';
 
     /**
@@ -18,7 +17,7 @@ class Cookies
      *
      * @var \Swlib\Http\Cookie[]
      */
-    public $raw = [];
+    protected $raw = [];
 
     /**
      * Cookies constructor.
@@ -240,5 +239,4 @@ class Cookies
         }
         $this->raw = $new;
     }
-
 }
