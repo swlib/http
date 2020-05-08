@@ -108,7 +108,7 @@ class RequestTest extends TestCase
     public function testBuildsRequestTargetWithFalseyQuery()
     {
         $r1 = new Request('GET', 'http://foo.com/baz?0');
-        $this->assertEquals('/baz?0', $r1->getRequestTarget());
+        $this->assertEquals('/baz?0=', $r1->getRequestTarget());
     }
 
     public function testHostIsAddedFirst()
