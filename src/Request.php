@@ -216,7 +216,7 @@ class Request extends Message implements RequestInterface
         return $this;
     }
 
-    public function getUploadedFile(string $name): UploadedFileInterface
+    public function getUploadedFile(string $name): ?UploadedFileInterface
     {
         return $this->uploadedFiles[$name] ?? null;
     }
