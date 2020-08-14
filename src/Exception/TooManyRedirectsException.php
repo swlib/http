@@ -38,11 +38,11 @@ class TooManyRedirectsException extends RequestException
     public function getRedirectsTrace(): string
     {
         $trace = '';
-        $index = -1;
+        $index = 0;
 
-        foreach ($this->redirect_headers as $location => $redirect_header) {
-            $index++;
-            $trace .= "#$index $location\n";
+        foreach ($this->redirect_headers as $location => $redirect_headers) {
+            ++$index;
+            $trace .= "#{$index} {$location}\n";
         }
 
         return $trace;
