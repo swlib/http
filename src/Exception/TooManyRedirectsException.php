@@ -10,6 +10,7 @@ namespace Swlib\Http\Exception;
 use Exception;
 use Swlib\Http\Request;
 use Swlib\Http\Response;
+use Swlib\Http\Util;
 
 class TooManyRedirectsException extends RequestException
 {
@@ -24,7 +25,7 @@ class TooManyRedirectsException extends RequestException
     ) {
         $this->redirect_headers = $redirects;
         $times = count($redirects);
-        $location = array_keys($this->redirect_headers)[$times - 1] ?? '';
+        $location = Util::getLastKey($this->redirect_headers);
         $message = "Too many redirects! more than {$times} times to {$location} !";
         parent::__construct($request, $response, $code, $message, $previous);
     }

@@ -101,4 +101,16 @@ class Util
             return self::parseHeader($raw_header[0]);
         }
     }
+
+    /**
+     * 获取数组最后一个键名
+     *
+     * @param array $array
+     * @return int|string|null
+     */
+    public static function getLastKey(array $array)
+    {
+        end($array);
+        return key($array);
+    }
 }
