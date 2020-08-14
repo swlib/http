@@ -40,7 +40,7 @@ class TooManyRedirectsException extends RequestException
         $trace = '';
         $index = -1;
 
-        foreach ($this->redirect_headers as $location => $redirect_headers) {
+        foreach ($this->redirect_headers as $location => $redirect_header) {
             $index++;
             $trace .= "#$index $location\n";
         }
