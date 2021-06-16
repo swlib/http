@@ -41,9 +41,20 @@ class Request extends Message implements RequestInterface
             return $this->requestTarget;
         }
 
-        parse_str($this->uri->getQuery(), $query);
+        $query = [];
+        if (!empty($this->uri->getQuery())) {
+            // Fix foo.bar
+            foreach(preg_split('/&(?!amp;)/', $this->uri->getQuery()) as $param) {
+                $item = explode('=', $param);
+                $query[$item[0]] = $item[1] ?? '';
+            }
+        }
         $query = $this->getQueryParams() + $query; //attribute value first
-        $query = http_build_query($query);
+        $query = urldecode(http_build_query($query));
+        // Fix redundant =
+        if (substr($this->uri->getQuery(), -1) !== '=') {
+            $query = substr($query, 0, -1);
+        }
 
         $target = $this->uri->getPath() ?: '/';
         $target = empty($query) ? $target : $target . '?' . $query;
