@@ -94,13 +94,13 @@ class Cookie
     public static function parseHeader(string $header): array
     {
         $cookie = [];
-        $kvs = explode('; ', $header);
+        $kvs = explode(';', $header);
         $nv = explode('=', array_shift($kvs));
         $cookie['name'] = $nv[0];
         //because of some stupid system could return Set-Cookie: foo=''; so we must replace it.
-        $cookie['value'] = str_replace(['\'\'', '""'], '', $nv[1]);
+        $cookie['value'] = str_replace(['\'\'', '""'], '', trim($nv[1]));
         foreach ($kvs as $kv) {
-            $kv = explode('=', $kv);
+            $kv = explode('=', trim($kv));
             $kv[0] = strtolower($kv[0]);
             if (isset($kv[1])) {
                 $cookie[$kv[0]] = $kv[1];
